@@ -1031,8 +1031,8 @@ function renderParada(ps){
   const lat=par.Lat||par.lat||'';
   const lng=par.Lng||par.lng||'';
   const dir=`${par.Dirección||par.direccion||''}, ${par.Localidad||par.localidad||''}, Buenos Aires, Argentina`;
-  const wazeUrl=lat&&lng?`https://waze.com/ul?ll=${lat},${lng}&navigate=yes`:`https://waze.com/ul?q=${encodeURIComponent(dir)}&navigate=yes`;
-  const mapsUrl=lat&&lng?`https://maps.google.com/?q=${lat},${lng}`:`https://maps.google.com/?q=${encodeURIComponent(dir)}`;
+  const wazeUrl=lat&&lng?`https://ul.waze.com/ul?ll=${lat},${lng}&navigate=yes&zoom=17`:`https://ul.waze.com/ul?q=${encodeURIComponent(dir)}&navigate=yes`;
+  const mapsUrl=lat&&lng?`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`:`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dir)}&travelmode=driving`;
   const tel=par.Teléfono||par.telefono||'';
   const contacto=par.Contacto||par.contacto||'';
   const notas=par.Notas||par.notas||'';
