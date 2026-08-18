@@ -159,6 +159,8 @@ const S = {
   repNombre: '',
   repFecha: '',
   startPoint: null,   // {lat, lng, label}
+  // edit reparto
+  editReparto: null,   // {id, nombre, fecha, paradas:[...]}
   // field
   reparto: null,
   paradaIdx: 0,
@@ -303,6 +305,23 @@ function nearestNeighbor(list, startFrom=null) {
     best=twoOpt(best);
   }
   return [...best,...noCoords];
+}
+
+// ── GOOGLE MAPS ROUTE URL ────────────────────────────────
+function buildGoogleMapsUrl(list, startPt) {
+  const stops = [];
+  if (startPt) stops.push(`${startPt.lat},${startPt.lng}`);
+  list.forEach(f => {
+    if (f.Lat && f.Lng) {
+      stops.push(`${+f.Lat},${+f.Lng}`);
+    } else {
+      const addr = [f.Dirección||f.direccion||'', f.Localidad||f.localidad||'', 'Buenos Aires', 'Argentina']
+        .filter(Boolean).join(', ');
+      stops.push(encodeURIComponent(addr));
+    }
+  });
+  if (stops.length < 2) return null;
+  return `https://www.google.com/maps/dir/${stops.join('/')}`;
 }
 
 // ── MAP ───────────────────────────────────────────────────
@@ -591,8 +610,9 @@ function renderTabNuevoReparto(){
 
 ${S.routeOrdered.length?`
 <div id="rmap"></div>
-<div style="font-size:13px;color:var(--text2);margin-bottom:10px">
-  📍 ${S.routeOrdered.length} paradas · Arrastrá ⠿ para reordenar
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+  <div style="font-size:13px;color:var(--text2)">📍 ${S.routeOrdered.length} paradas · Arrastrá ⠿ para reordenar</div>
+  ${(()=>{const u=buildGoogleMapsUrl(S.routeOrdered,S.startPoint);return u?`<a href="${u}" target="_blank"><button class="btn bp bsm" style="white-space:nowrap">🗺 Ver en Maps</button></a>`:''})()}
 </div>
 <div id="rlist">
   ${S.routeOrdered.map((f,i)=>`
@@ -785,9 +805,10 @@ async function verReparto(id){
     modal(`
 <div class="modal-title">${esc(rep.Nombre)}</div>
 <div style="font-size:13px;color:var(--text2);margin-bottom:10px">${fechaStr(rep.Fecha)}</div>
-<div style="display:flex;gap:8px;margin-bottom:14px">
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
   <button class="btn bo bsm" style="flex:1" onclick="copyId('${id}')">📋 Copiar ID</button>
-  <button class="btn bgh bsm" style="flex:1" onclick="closeModal();openEditReparto('${id}','${esc(rep.Nombre)}','${fechaVal}')">✏️ Editar</button>
+  <button class="btn bgh bsm" style="flex:1" onclick="closeModal();openEditReparto('${id}')">✏️ Editar</button>
+  ${(()=>{const u=buildGoogleMapsUrl(ps,null);return u?`<a href="${u}" target="_blank" style="flex:1"><button class="btn bp bsm" style="width:100%;white-space:nowrap">🗺 Ver ruta en Maps</button></a>`:''})()}
 </div>
 <div style="display:flex;gap:8px;margin-bottom:16px;text-align:center">
   <div style="flex:1;background:#D1FAE5;border-radius:10px;padding:12px">
@@ -821,25 +842,109 @@ ${ps.map((p,i)=>`
   }catch(e){toast('Error: '+e.message);}
 }
 
-function openEditReparto(id, nombre, fecha){
+async function openEditReparto(id){
+  toast('Cargando...',2000);
+  try{
+    const rep=await apiFetch('getReparto',{id});
+    S.editReparto={
+      id, nombre:rep.Nombre||'',
+      fecha:String(rep.Fecha||'').split('T')[0],
+      paradas:(rep.paradas||[]).map(p=>({...p}))
+    };
+    renderEditModal();
+  }catch(e){toast('Error: '+e.message);}
+}
+
+function renderEditModal(){
+  const er=S.editReparto;
   modal(`
 <div class="modal-title">✏️ Editar reparto</div>
-<div class="fld"><label>Nombre</label><input id="er-n" value="${esc(nombre)}"></div>
-<div class="fld"><label>Fecha</label><input id="er-f" type="date" value="${esc(fecha)}"></div>
-<div style="display:flex;gap:8px;margin-top:6px">
-  <button class="btn bp" onclick="saveEditReparto('${id}')">Guardar</button>
+<div class="fld"><label>Nombre</label><input id="er-n" value="${esc(er.nombre)}"></div>
+<div class="fld"><label>Fecha</label><input id="er-f" type="date" value="${esc(er.fecha)}"></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px">
+  <div style="font-size:13px;font-weight:700;color:var(--text2)">PARADAS (${er.paradas.length})</div>
+  <button class="btn bp bsm" onclick="openAddToReparto()">+ Agregar</button>
+</div>
+${er.paradas.map((p,i)=>`
+<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+  <div style="width:22px;height:22px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div>
+  <div style="flex:1;min-width:0">
+    <div style="font-weight:600;font-size:13px">${esc(p.Nombre||p.nombre||'')}</div>
+    <div style="font-size:11px;color:var(--text2)">${esc(p.Dirección||p.direccion||'')} · ${esc(p.Localidad||p.localidad||'')}</div>
+  </div>
+  <button style="background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;padding:4px" onclick="removeParadaEdit(${i})">✕</button>
+</div>`).join('')}
+<div style="display:flex;gap:8px;margin-top:14px">
+  <button class="btn bp" onclick="saveEditReparto()">Guardar</button>
   <button class="btn bgh" onclick="closeModal()">Cancelar</button>
 </div>`);}
 
-async function saveEditReparto(id){
-  const nombre=document.getElementById('er-n').value.trim();
-  const fecha=document.getElementById('er-f').value;
+function removeParadaEdit(i){
+  S.editReparto.paradas.splice(i,1);
+  renderEditModal();
+}
+
+function openAddToReparto(){
+  modal(`
+<div class="modal-title">Agregar ferreterías</div>
+<input class="sbox" placeholder="🔍 Buscar..." oninput="filtAddSel(this.value)">
+<div id="add-sel-list">${renderAddSelItems('')}</div>
+<div style="display:flex;gap:8px;margin-top:14px">
+  <button class="btn bp" onclick="confirmAddToReparto()">Confirmar</button>
+  <button class="btn bgh" onclick="renderEditModal()">Cancelar</button>
+</div>`);}
+
+function renderAddSelItems(q){
+  const existing=new Set(S.editReparto.paradas.map(p=>p.ID_Ferretería||p.id_ferreteria||p.ID));
+  const list=(q?S.ferreterias.filter(f=>(f.Nombre||'').toLowerCase().includes(q.toLowerCase())||(f.Localidad||'').toLowerCase().includes(q.toLowerCase())):S.ferreterias)
+    .filter(f=>!existing.has(f.ID));
+  if(!list.length) return `<div style="padding:20px;text-align:center;color:var(--muted)">Sin resultados</div>`;
+  return list.map(f=>`
+<label class="chk-item">
+  <input type="checkbox" data-id="${esc(f.ID)}">
+  <div>
+    <div style="font-weight:600;font-size:14px">${esc(f.Nombre)}</div>
+    <div style="font-size:12px;color:var(--text2)">${esc(f.Dirección)} · ${esc(f.Localidad)}</div>
+  </div>
+</label>`).join('');}
+
+function filtAddSel(q){
+  const el=document.getElementById('add-sel-list');
+  if(el) el.innerHTML=renderAddSelItems(q);
+}
+
+function confirmAddToReparto(){
+  const checked=[...document.querySelectorAll('#add-sel-list input:checked')];
+  const ids=checked.map(el=>el.dataset.id);
+  const toAdd=S.ferreterias.filter(f=>ids.includes(f.ID));
+  toAdd.forEach(f=>S.editReparto.paradas.push({
+    Nombre:f.Nombre, Dirección:f.Dirección, Localidad:f.Localidad,
+    Teléfono:f.Teléfono||'', Contacto:f.Contacto||'', Notas:f.Notas||'',
+    Lat:f.Lat||'', Lng:f.Lng||'', 'ID_Ferretería':f.ID, Estado:'pendiente'
+  }));
+  renderEditModal();
+}
+
+async function saveEditReparto(){
+  const er=S.editReparto;
+  const nombre=document.getElementById('er-n')?.value?.trim()||er.nombre;
+  const fecha=document.getElementById('er-f')?.value||er.fecha;
   if(!nombre){toast('El nombre es obligatorio');return;}
   closeModal();toast('Guardando...');
   try{
-    await apiFetch('updateReparto',{id,nombre,fecha});
-    await loadRepartos();
-    render();
+    await apiFetch('updateReparto',{id:er.id,nombre,fecha});
+    await apiFetch('replaceParadas',{
+      id:er.id,
+      paradas:er.paradas.map((p,i)=>({
+        id_ferreteria:p['ID_Ferretería']||p.id_ferreteria||'',
+        nombre:p.Nombre||p.nombre||'', direccion:p.Dirección||p.direccion||'',
+        localidad:p.Localidad||p.localidad||'', telefono:p.Teléfono||p.telefono||'',
+        contacto:p.Contacto||p.contacto||'', notas:p.Notas||p.notas||'',
+        lat:p.Lat||p.lat||'', lng:p.Lng||p.lng||'', orden:i+1
+      }))
+    });
+    S.editReparto=null;
+    await loadRepartos();render();
     toast('Reparto actualizado ✓');
   }catch(e){toast('Error: '+e.message);}
 }
