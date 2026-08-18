@@ -971,21 +971,35 @@ function renderFieldEntry(){return `
   </button>
 </div>`;}
 
-async function loadReparto(){
-  const id=document.getElementById('fid')?.value?.trim();
+async function loadReparto(id, savedIdx){
+  if(!id) id=document.getElementById('fid')?.value?.trim();
   if(!id){toast('Ingresá el ID');return;}
   S.view='loading';render();
   try{
     const rep=await apiFetch('getReparto',{id});
     if(!rep||!rep.paradas){
       S.view='field-entry';render();
+      localStorage.removeItem('hzn_field_reparto');
+      localStorage.removeItem('hzn_field_idx');
       toast('No se encontró el reparto. Revisá el ID.');return;
     }
     S.reparto=rep;
-    const first=rep.paradas.findIndex(p=>p.Estado==='pendiente');
-    S.paradaIdx=first>=0?first:0;
+    if(savedIdx!=null && savedIdx>=0 && savedIdx<rep.paradas.length){
+      S.paradaIdx=savedIdx;
+    } else {
+      const first=rep.paradas.findIndex(p=>p.Estado==='pendiente');
+      S.paradaIdx=first>=0?first:0;
+    }
+    localStorage.setItem('hzn_field_reparto',id);
+    localStorage.setItem('hzn_field_idx',S.paradaIdx);
     S.view='field';render();
   }catch(e){S.view='field-entry';render();toast('Error: '+e.message);}
+}
+
+function salirModoRepartidor(){
+  localStorage.removeItem('hzn_field_reparto');
+  localStorage.removeItem('hzn_field_idx');
+  S.reparto=null;S.paradaIdx=0;S.view='field-entry';render();
 }
 
 function renderField(){
@@ -999,7 +1013,7 @@ function renderField(){
   return `
 <div class="fhdr">
   <div class="fhdr-top">
-    <button style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px" onclick="S.view='field-entry';render()">←</button>
+    <button style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px" onclick="salirModoRepartidor()">←</button>
     <div style="flex:1">
       <div class="fhdr-rep">${esc(rep.Nombre)}</div>
       <div class="fhdr-prog">${done}/${total} completadas · ${pct}%</div>
@@ -1113,6 +1127,7 @@ function irA(idx){
   const nota=document.getElementById('nota');
   if(nota&&S.reparto?.paradas[S.paradaIdx]) S.reparto.paradas[S.paradaIdx].Nota=nota.value;
   S.paradaIdx=idx;
+  localStorage.setItem('hzn_field_idx',idx);
   render();window.scrollTo(0,0);
 }
 
@@ -1165,14 +1180,20 @@ async function loadApp(){
 const qp=new URLSearchParams(window.location.search);
 if(qp.get('reparto')){
   // Deep link con reparto ID
-  document.getElementById('app').innerHTML=renderFieldEntry();
-  S.view='field-entry';
+  S.view='field-entry';render();
   setTimeout(()=>{
     const el=document.getElementById('fid');
     if(el){el.value=qp.get('reparto');loadReparto();}
   },100);
 } else {
-  loadApp();
+  // Restaurar sesión del repartidor si existe
+  const _savedRep=localStorage.getItem('hzn_field_reparto');
+  const _savedIdx=parseInt(localStorage.getItem('hzn_field_idx')||'0',10);
+  if(_savedRep){
+    loadReparto(_savedRep, _savedIdx);
+  } else {
+    loadApp();
+  }
 }
 </script>
 </body>
