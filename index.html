@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -157,6 +158,7 @@ const S = {
   routeOrdered: [],
   repNombre: '',
   repFecha: '',
+  startPoint: null,   // {lat, lng, label}
   // field
   reparto: null,
   paradaIdx: 0,
@@ -206,6 +208,31 @@ async function geocode(dir, loc) {
   return null;
 }
 
+// ── GEOCODING MASIVO ──────────────────────────────────────
+async function geocodeAndSaveAll(list) {
+  const needs = list.filter(f => !f.Lat || !f.Lng);
+  if (!needs.length) return;
+  for (let i = 0; i < needs.length; i++) {
+    const f = needs[i];
+    toast(`Geocodificando ${i+1}/${needs.length}: ${f.Nombre}...`, 5000);
+    const coords = await geocode(f.Dirección, f.Localidad);
+    if (coords) {
+      f.Lat = coords.lat; f.Lng = coords.lng;
+      try {
+        await apiFetch('saveFerreteria', {
+          id: f.ID, nombre: f.Nombre, direccion: f.Dirección,
+          localidad: f.Localidad, zona: f.Zona||'',
+          telefono: f.Teléfono||'', contacto: f.Contacto||'',
+          notas: f.Notas||'', lat: coords.lat, lng: coords.lng
+        });
+        const si = S.ferreterias.findIndex(x => x.ID === f.ID);
+        if (si >= 0) { S.ferreterias[si].Lat = coords.lat; S.ferreterias[si].Lng = coords.lng; }
+      } catch(e) {}
+    }
+    if (i < needs.length - 1) await new Promise(r => setTimeout(r, 1100)); // Nominatim: 1 req/s
+  }
+}
+
 // ── ROUTING ───────────────────────────────────────────────
 function haversine(a, b) {
   const R=6371, dLat=(b.lat-a.lat)*Math.PI/180, dLng=(b.lng-a.lng)*Math.PI/180;
@@ -213,18 +240,69 @@ function haversine(a, b) {
   return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
 }
 
-function nearestNeighbor(list) {
-  const pts = list.filter(f => f.Lat && f.Lng).map(f => ({...f, lat:+f.Lat, lng:+f.Lng}));
-  const noCoords = list.filter(f => !f.Lat || !f.Lng);
-  if (!pts.length) return list;
-  const unvisited = [...pts], route = [unvisited.shift()];
-  while (unvisited.length) {
-    const last = route[route.length-1];
-    let ni=0, nd=Infinity;
-    unvisited.forEach((p,i) => { const d=haversine(last,p); if(d<nd){nd=d;ni=i;} });
-    route.push(unvisited.splice(ni,1)[0]);
+function totalDist(route) {
+  let d=0;
+  for(let i=0;i<route.length-1;i++) d+=haversine(route[i],route[i+1]);
+  return d;
+}
+
+function nnFrom(pts, startIdx) {
+  const vis=[...pts];
+  const r=[vis.splice(startIdx,1)[0]];
+  while(vis.length){
+    const cur=r[r.length-1];
+    let bi=0, bd=Infinity;
+    vis.forEach((p,i)=>{ const d=haversine(cur,p); if(d<bd){bd=d;bi=i;} });
+    r.push(vis.splice(bi,1)[0]);
   }
-  return [...route, ...noCoords];
+  return r;
+}
+
+function twoOpt(r) {
+  const n=r.length;
+  let improved=true;
+  while(improved){
+    improved=false;
+    for(let i=0;i<n-1;i++){
+      for(let j=i+2;j<n;j++){
+        const before=haversine(r[i],r[i+1])+(j+1<n?haversine(r[j],r[j+1]):0);
+        const after =haversine(r[i],r[j])  +(j+1<n?haversine(r[i+1],r[j+1]):0);
+        if(after<before-0.0001){
+          r.splice(i+1,j-i,...r.slice(i+1,j+1).reverse());
+          improved=true;
+        }
+      }
+    }
+  }
+  return r;
+}
+
+function nearestNeighbor(list, startFrom=null) {
+  const pts=list.filter(f=>f.Lat&&f.Lng).map(f=>({...f,lat:+f.Lat,lng:+f.Lng}));
+  const noCoords=list.filter(f=>!f.Lat||!f.Lng);
+  if(pts.length<2) return [...pts,...noCoords];
+  let best=null;
+  if(startFrom){
+    // Punto de inicio fijo: NN desde el depot
+    const vis=[...pts]; const r=[]; let cur=startFrom;
+    while(vis.length){
+      let bi=0,bd=Infinity;
+      vis.forEach((p,i)=>{const d=haversine(cur,p);if(d<bd){bd=d;bi=i;}});
+      r.push(vis.splice(bi,1)[0]);
+      cur=r[r.length-1];
+    }
+    best=twoOpt(r);
+  } else {
+    // Sin punto fijo: probar todos los orígenes
+    let bestD=Infinity;
+    for(let s=0;s<pts.length;s++){
+      const r=nnFrom([...pts],s);
+      const d=totalDist(r);
+      if(d<bestD){bestD=d;best=r;}
+    }
+    best=twoOpt(best);
+  }
+  return [...best,...noCoords];
 }
 
 // ── MAP ───────────────────────────────────────────────────
@@ -234,11 +312,18 @@ function initMap(id) {
   map = L.map(id).setView([-34.52,-58.72],11);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:18}).addTo(map);
 }
-function drawRoute(list) {
+function drawRoute(list, startPt=null) {
   if(!map) return;
   mapLayers.forEach(l=>map.removeLayer(l));
   mapLayers=[];
   const coords=[];
+  if(startPt){
+    const ll=[startPt.lat,startPt.lng];
+    coords.push(ll);
+    const m=L.circleMarker(ll,{radius:13,fillColor:'#16A34A',color:'#fff',weight:2.5,fillOpacity:1}).addTo(map);
+    m.bindTooltip('🏠 Salida: '+startPt.label,{permanent:false,direction:'top'});
+    mapLayers.push(m);
+  }
   list.forEach((f,i) => {
     if(!f.Lat||!f.Lng) return;
     const ll=[+f.Lat,+f.Lng];
@@ -247,7 +332,7 @@ function drawRoute(list) {
     m.bindTooltip(`${i+1}. ${f.Nombre}`,{permanent:false,direction:'top'});
     mapLayers.push(m);
   });
-  if(coords.length>1) {
+  if(coords.length>1){
     const ln=L.polyline(coords,{color:'#2563EB',weight:2,opacity:.5,dashArray:'6 4'}).addTo(map);
     mapLayers.push(ln);
     map.fitBounds(L.latLngBounds(coords),{padding:[20,20]});
@@ -354,7 +439,7 @@ function renderAdmin(){return `
 function setTab(i){
   S.adminTab=i; S.search='';
   render();
-  if(i===1 && S.routeOrdered.length>0) setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered);attachSort();},100);
+  if(i===1 && S.routeOrdered.length>0) setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered,S.startPoint);attachSort();},100);
 }
 
 function showSettings(){modal(`
@@ -485,6 +570,18 @@ function renderTabNuevoReparto(){
   </div>
 </div>
 
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:10px">📍 Punto de partida</div>
+  ${S.startPoint
+    ? `<div style="font-size:14px;margin-bottom:10px">✅ ${esc(S.startPoint.label)}</div>
+       <button class="btn bgh bsm" onclick="S.startPoint=null;render()">✕ Quitar</button>`
+    : `<div style="display:flex;gap:8px">
+        <button class="btn bp bsm" style="flex:1" onclick="useGPS()">📡 Mi ubicación</button>
+        <button class="btn bgh bsm" style="flex:1" onclick="openStartPointModal()">🔍 Ingresar dirección</button>
+       </div>`
+  }
+</div>
+
 <div style="display:flex;gap:8px;margin-bottom:12px">
   <button class="btn bo" style="flex:2" onclick="openSelector()">
     📦 Seleccionar ferreterías ${S.selectedIds.size?`(${S.selectedIds.size})`:''}
@@ -548,14 +645,55 @@ function toggleSel(id){
 function confirmSel(){
   S.routeOrdered=S.ferreterias.filter(f=>S.selectedIds.has(f.ID));
   closeModal();render();
-  setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered);attachSort();},100);
+  setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered,S.startPoint);attachSort();},100);
 }
 
-function optimize(){
+function useGPS(){
+  if(!navigator.geolocation){toast('Tu navegador no soporta GPS');return;}
+  toast('Obteniendo ubicación...⏳',5000);
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      S.startPoint={lat:pos.coords.latitude,lng:pos.coords.longitude,label:'Mi ubicación actual'};
+      render();toast('Punto de partida establecido ✓');
+    },
+    ()=>toast('No se pudo obtener la ubicación')
+  );
+}
+
+function openStartPointModal(){modal(`
+<div class="modal-title">Punto de partida</div>
+<div class="fld"><label>Dirección o lugar</label>
+<input id="sp-dir" placeholder="Av. San Martín 1234, Benavidez" oninput="" style="font-size:15px"></div>
+<div style="display:flex;gap:8px">
+  <button class="btn bp" onclick="setStartFromAddress()">Buscar →</button>
+  <button class="btn bgh" onclick="closeModal()">Cancelar</button>
+</div>`);}
+
+async function setStartFromAddress(){
+  const dir=document.getElementById('sp-dir').value.trim();
+  if(!dir){toast('Ingresá una dirección');return;}
+  toast('Buscando...',5000);
+  try{
+    const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dir+', Buenos Aires, Argentina')}&limit=1&countrycodes=ar`;
+    const r=await fetch(url,{headers:{'Accept-Language':'es'}});
+    const d=await r.json();
+    if(d[0]){
+      S.startPoint={lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon),label:dir};
+      closeModal();render();toast('Punto de partida establecido ✓');
+    } else toast('No se encontró la dirección');
+  }catch(e){toast('Error buscando dirección');}
+}
+
+async function optimize(){
   const sel=S.ferreterias.filter(f=>S.selectedIds.has(f.ID));
-  S.routeOrdered=nearestNeighbor(sel);
+  const needs=sel.filter(f=>!f.Lat||!f.Lng);
+  if(needs.length){
+    toast(`Geocodificando ${needs.length} direcciones... esto puede tardar unos segundos`,10000);
+    await geocodeAndSaveAll(needs);
+  }
+  S.routeOrdered=nearestNeighbor(sel,S.startPoint);
   render();
-  setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered);attachSort();toast('Ruta optimizada ⚡');},100);
+  setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered,S.startPoint);attachSort();toast('Ruta optimizada ⚡');},100);
 }
 
 function attachSort(){
@@ -567,7 +705,7 @@ function attachSort(){
       const ids=[...list.querySelectorAll('.ri')].map(el=>el.dataset.id);
       S.routeOrdered=ids.map(id=>S.routeOrdered.find(f=>f.ID===id));
       list.querySelectorAll('.ri-num').forEach((el,i)=>el.textContent=i+1);
-      drawRoute(S.routeOrdered);
+      drawRoute(S.routeOrdered,S.startPoint);
     }
   });
 }
@@ -643,9 +781,14 @@ async function verReparto(id){
     const ent=ps.filter(p=>p.Estado==='entregado').length;
     const nc=ps.filter(p=>p.Estado==='sin-contacto').length;
     const pen=ps.filter(p=>p.Estado==='pendiente').length;
+    const fechaVal=String(rep.Fecha||'').split('T')[0];
     modal(`
 <div class="modal-title">${esc(rep.Nombre)}</div>
-<div style="font-size:13px;color:var(--text2);margin-bottom:14px">${fechaStr(rep.Fecha)}</div>
+<div style="font-size:13px;color:var(--text2);margin-bottom:10px">${fechaStr(rep.Fecha)}</div>
+<div style="display:flex;gap:8px;margin-bottom:14px">
+  <button class="btn bo bsm" style="flex:1" onclick="copyId('${id}')">📋 Copiar ID</button>
+  <button class="btn bgh bsm" style="flex:1" onclick="closeModal();openEditReparto('${id}','${esc(rep.Nombre)}','${fechaVal}')">✏️ Editar</button>
+</div>
 <div style="display:flex;gap:8px;margin-bottom:16px;text-align:center">
   <div style="flex:1;background:#D1FAE5;border-radius:10px;padding:12px">
     <div style="font-size:26px;font-weight:800;color:#065F46">${ent}</div>
@@ -675,6 +818,29 @@ ${ps.map((p,i)=>`
   </div>
 </div>`).join('')}
 <button class="btn bgh" style="margin-top:16px" onclick="closeModal()">Cerrar</button>`);
+  }catch(e){toast('Error: '+e.message);}
+}
+
+function openEditReparto(id, nombre, fecha){
+  modal(`
+<div class="modal-title">✏️ Editar reparto</div>
+<div class="fld"><label>Nombre</label><input id="er-n" value="${esc(nombre)}"></div>
+<div class="fld"><label>Fecha</label><input id="er-f" type="date" value="${esc(fecha)}"></div>
+<div style="display:flex;gap:8px;margin-top:6px">
+  <button class="btn bp" onclick="saveEditReparto('${id}')">Guardar</button>
+  <button class="btn bgh" onclick="closeModal()">Cancelar</button>
+</div>`);}
+
+async function saveEditReparto(id){
+  const nombre=document.getElementById('er-n').value.trim();
+  const fecha=document.getElementById('er-f').value;
+  if(!nombre){toast('El nombre es obligatorio');return;}
+  closeModal();toast('Guardando...');
+  try{
+    await apiFetch('updateReparto',{id,nombre,fecha});
+    await loadRepartos();
+    render();
+    toast('Reparto actualizado ✓');
   }catch(e){toast('Error: '+e.message);}
 }
 
