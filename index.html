@@ -308,7 +308,7 @@ function normalizarNombre(s) {
 function palabrasSignificativas(s) {
   const stop = new Set(['la','el','las','los','de','del','ferreteria','ferreria',
     'y','e','a','en','san','gral','general','norte','sur','este','oeste','centro']);
-  return normalizarNombre(s).split(' ').filter(w => w.length > 2 && !stop.has(w));
+  return normalizarNombre(s).split(' ').filter(w => (w.length > 2 || /^\d+$/.test(w)) && !stop.has(w));
 }
 
 function matchFerreteria(nombre) {
@@ -794,9 +794,9 @@ function parsearYCargar() {
     const matched = matchFerreteria(nombre);
     if (matched) {
       paradas.push({
-        ID: matched.ID, Nombre: matched.Nombre,
-        'Dirección': matched['Dirección'] || dir,
-        Localidad: matched.Localidad || '',
+        ID: matched.ID, Nombre: nombre,
+        'Dirección': dir,
+        Localidad: '',
         Lat: matched.Lat || '', Lng: matched.Lng || '',
         'Teléfono': matched['Teléfono'] || '',
         Contacto: matched.Contacto || '',
