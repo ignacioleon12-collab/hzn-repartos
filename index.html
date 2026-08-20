@@ -154,7 +154,7 @@ const S = {
   ferreterias: [],
   repartos: [],
   // route builder
-  selectedIds: new Set(),
+  pasteText: '',
   routeOrdered: [],
   repNombre: '',
   repFecha: '',
@@ -458,7 +458,7 @@ function renderAdmin(){return `
 function setTab(i){
   S.adminTab=i; S.search='';
   render();
-  if(i===1 && S.routeOrdered.length>0) setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered,S.startPoint);attachSort();},100);
+  if(i===1 && S.routeOrdered.length>0) setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered,S.startPoint);attachSort();},150);
 }
 
 function showSettings(){modal(`
@@ -601,11 +601,12 @@ function renderTabNuevoReparto(){
   }
 </div>
 
-<div style="display:flex;gap:8px;margin-bottom:12px">
-  <button class="btn bo" style="flex:2" onclick="openSelector()">
-    📦 Seleccionar ferreterías ${S.selectedIds.size?`(${S.selectedIds.size})`:''}
-  </button>
-  ${S.selectedIds.size>0?`<button class="btn bam bsm" style="flex:1;white-space:nowrap" onclick="optimize()">⚡ Optimizar</button>`:''}
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px">📋 Ferreterías del recorrido</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Una por línea · Formato: <strong>Nombre, Dirección completa de Google Maps</strong></div>
+  <textarea id="paste-area" rows="6" style="width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:14px;font-family:inherit;resize:vertical;background:var(--bg);color:var(--text1)" placeholder="FASE, Carlos Tejedor 1182, B1617 Tigre, Provincia de Buenos Aires
+Ferretería Tincho, Riobamba 582, B1617 Gral. Pacheco, Provincia de Buenos Aires" oninput="S.pasteText=this.value">${esc(S.pasteText)}</textarea>
+  <button class="btn bo" style="width:100%;margin-top:10px" onclick="parsearYOptimizar()">⚡ Armar recorrido</button>
 </div>
 
 ${S.routeOrdered.length?`
@@ -620,51 +621,50 @@ ${S.routeOrdered.length?`
     <div class="ri-num">${i+1}</div>
     <div style="flex:1">
       <div style="font-weight:600;font-size:14px">${esc(f.Nombre)}</div>
-      <div style="font-size:12px;color:var(--text2)">${esc(f.Dirección)} · ${esc(f.Localidad)}</div>
+      <div style="font-size:12px;color:var(--text2)">${esc(f.Dirección)}</div>
     </div>
     <div class="ri-drag">⠿</div>
   </div>`).join('')}
 </div>
 <button class="btn bg2" style="margin-top:16px" onclick="crearReparto()">🚀 Iniciar reparto</button>
-`:empty('🗺','Seleccioná ferreterías y optimizá la ruta')}
-`;}
+`:''}`;}
 
-function openSelector(){
-  modal(`
-<div class="modal-title">Seleccionar ferreterías</div>
-<input class="sbox" placeholder="🔍 Buscar..." oninput="filtSel(this.value)" id="ssel">
-<div id="sel-list">${renderSelItems('')}</div>
-<div style="display:flex;gap:8px;margin-top:14px">
-  <button class="btn bp" id="sel-ok" onclick="confirmSel()">Confirmar (${S.selectedIds.size})</button>
-  <button class="btn bgh" onclick="closeModal()">Cancelar</button>
-</div>`);}
+async function parsearYOptimizar(){
+  const txt=(document.getElementById('paste-area')?.value||S.pasteText).trim();
+  if(!txt){toast('Pegá las ferreterías primero');return;}
+  S.pasteText=txt;
 
-function renderSelItems(q){
-  const list=q?S.ferreterias.filter(f=>(f.Nombre||'').toLowerCase().includes(q.toLowerCase())||(f.Localidad||'').toLowerCase().includes(q.toLowerCase())):S.ferreterias;
-  return list.map(f=>`
-<label class="chk-item">
-  <input type="checkbox" ${S.selectedIds.has(f.ID)?'checked':''} onchange="toggleSel('${esc(f.ID)}')">
-  <div>
-    <div style="font-weight:600;font-size:14px">${esc(f.Nombre)}</div>
-    <div style="font-size:12px;color:var(--text2)">${esc(f.Dirección)} · ${esc(f.Localidad)}</div>
-  </div>
-</label>`).join('');}
+  const lineas=txt.split('\n').map(l=>l.trim()).filter(Boolean);
+  if(!lineas.length){toast('No hay líneas válidas');return;}
 
-function filtSel(q){
-  const el=document.getElementById('sel-list');
-  if(el) el.innerHTML=renderSelItems(q);
-}
+  const paradas=[];
+  for(let i=0;i<lineas.length;i++){
+    const idx=lineas[i].indexOf(',');
+    if(idx<0){toast(`Línea ${i+1} sin coma — saltada`);continue;}
+    const nombre=lineas[i].slice(0,idx).trim();
+    const dir=lineas[i].slice(idx+1).trim();
+    paradas.push({ID:'tmp-'+i, Nombre:nombre, Dirección:dir, Localidad:'', Lat:'', Lng:''});
+  }
 
-function toggleSel(id){
-  if(S.selectedIds.has(id)) S.selectedIds.delete(id);
-  else S.selectedIds.add(id);
-  const btn=document.getElementById('sel-ok');
-  if(btn) btn.textContent=`Confirmar (${S.selectedIds.size})`;
-}
+  if(!paradas.length){toast('No se pudieron parsear las líneas');return;}
 
-function confirmSel(){
-  S.routeOrdered=S.ferreterias.filter(f=>S.selectedIds.has(f.ID));
-  closeModal();render();
+  // Geocodificar
+  toast(`Geocodificando ${paradas.length} direcciones...`,15000);
+  let ok=0;
+  for(let i=0;i<paradas.length;i++){
+    const p=paradas[i];
+    const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(p.Dirección)}&limit=1&countrycodes=ar`;
+    try{
+      const r=await fetch(url,{headers:{'Accept-Language':'es'}});
+      const d=await r.json();
+      if(d[0]){p.Lat=parseFloat(d[0].lat);p.Lng=parseFloat(d[0].lon);ok++;}
+    }catch(e){}
+    if(i<paradas.length-1) await new Promise(r=>setTimeout(r,1100));
+  }
+
+  toast(`${ok}/${paradas.length} geocodificadas ✓`);
+  S.routeOrdered=nearestNeighbor(paradas,S.startPoint);
+  render();
   setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered,S.startPoint);attachSort();},100);
 }
 
@@ -741,15 +741,16 @@ async function crearReparto(){
     const res=await apiFetch('createReparto',{
       nombre, fecha,
       paradas: S.routeOrdered.map(f=>({
-        id_ferreteria:f.ID, nombre:f.Nombre, direccion:f.Dirección,
-        localidad:f.Localidad, telefono:f.Teléfono||'',
+        id_ferreteria:(f.ID||'').startsWith('tmp-')?'':f.ID,
+        nombre:f.Nombre, direccion:f.Dirección,
+        localidad:f.Localidad||'', telefono:f.Teléfono||'',
         contacto:f.Contacto||'', notas:f.Notas||'',
         lat:f.Lat||'', lng:f.Lng||''
       }))
     });
 
     const rid=res.id;
-    S.selectedIds.clear(); S.routeOrdered=[]; S.repNombre='';
+    S.pasteText=''; S.routeOrdered=[]; S.repNombre='';
     await loadRepartos();
 
     modal(`
