@@ -1033,15 +1033,154 @@ function removeParadaEdit(i) {
   renderEditModal();
 }
 
+function diasDesde(fechaStr) {
+  if (!fechaStr) return null;
+  const d = new Date(fechaStr);
+  if (isNaN(d.getTime())) return null;
+  return Math.floor((Date.now() - d.getTime()) / 86400000);
+}
+
+function ultimaVisitaBadge(fechaStr) {
+  const dias = diasDesde(fechaStr);
+  if (dias === null) return '';
+  const reciente = dias <= 30;
+  return `<span style="background:${reciente?'#fef3c7':'#dcfce7'};color:${reciente?'#92400e':'#166534'};border-radius:4px;padding:1px 6px;font-size:10px;margin-left:5px">Visitada hace ${dias}d</span>`;
+}
+
 function openAddToReparto() {
   modal(`
-<div class="modal-title">Agregar ferreterías</div>
-<input class="sbox" placeholder="🔍 Buscar..." oninput="filtAddSel(this.value)">
-<div id="add-sel-list">${renderAddSelItems('')}</div>
+<div class="modal-title">Agregar paradas</div>
+<div style="display:flex;gap:8px;margin-bottom:14px">
+  <button id="tab-paste" class="btn bp bsm" onclick="switchAddTab('paste')">📋 Pegar lista</button>
+  <button id="tab-buscar" class="btn bgh bsm" onclick="switchAddTab('buscar')">🔍 Buscar en base</button>
+</div>
+<div id="add-tab-paste">
+  <div style="font-size:13px;color:var(--text2);margin-bottom:8px">Una por línea: <strong>Nombre, Dirección</strong></div>
+  <textarea id="edit-paste-area" style="width:100%;height:160px;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;resize:vertical;box-sizing:border-box" placeholder="Ferretería El Sol, Av. San Martín 1234 Benavidez&#10;Ferretería Norte, Ruta 9 km 42 Tigre"></textarea>
+  <div style="display:flex;gap:8px;margin-top:12px">
+    <button class="btn bp" onclick="parsearParaEdit()">Procesar →</button>
+    <button class="btn bgh" onclick="renderEditModal()">Cancelar</button>
+  </div>
+</div>
+<div id="add-tab-buscar" style="display:none">
+  <input class="sbox" placeholder="🔍 Buscar..." oninput="filtAddSel(this.value)">
+  <div id="add-sel-list" style="max-height:300px;overflow-y:auto">${renderAddSelItems('')}</div>
+  <div style="display:flex;gap:8px;margin-top:14px">
+    <button class="btn bp" onclick="confirmAddToReparto()">Confirmar</button>
+    <button class="btn bgh" onclick="renderEditModal()">Cancelar</button>
+  </div>
+</div>`);
+}
+
+function switchAddTab(tab) {
+  document.getElementById('add-tab-paste').style.display  = tab==='paste'  ? '' : 'none';
+  document.getElementById('add-tab-buscar').style.display = tab==='buscar' ? '' : 'none';
+  document.getElementById('tab-paste').className  = 'btn bsm ' + (tab==='paste'  ? 'bp' : 'bgh');
+  document.getElementById('tab-buscar').className = 'btn bsm ' + (tab==='buscar' ? 'bp' : 'bgh');
+}
+
+function parsearParaEdit() {
+  const txt = document.getElementById('edit-paste-area')?.value?.trim();
+  if (!txt) { toast('Pegá las ferreterías primero'); return; }
+  const lineas = txt.split('\n').map(l => l.trim()).filter(Boolean);
+  if (!lineas.length) { toast('No hay líneas válidas'); return; }
+
+  const paradas = [];
+  const matchCounts = {}; // matchedId → [nombres]
+
+  for (let i = 0; i < lineas.length; i++) {
+    const idx = lineas[i].indexOf(',');
+    if (idx < 0) { toast(`Línea ${i+1} sin coma — saltada`); continue; }
+    const nombre = lineas[i].slice(0, idx).trim();
+    const dir    = lineas[i].slice(idx + 1).trim();
+    const matched = matchFerreteria(nombre);
+
+    if (matched) {
+      if (!matchCounts[matched.ID]) matchCounts[matched.ID] = [];
+      matchCounts[matched.ID].push(nombre);
+      paradas.push({
+        ID: matched.ID, Nombre: nombre, 'Dirección': dir,
+        Localidad: '', Lat: matched.Lat||'', Lng: matched.Lng||'',
+        'Teléfono': matched['Teléfono']||'', Contacto: matched.Contacto||'', Notas: matched.Notas||'',
+        _esNueva: false, _matchedId: matched.ID,
+        _ultimaVisita: matched.UltimaVisita || matched['UltimaVisita'] || ''
+      });
+    } else {
+      paradas.push({
+        ID: 'nueva-' + i, Nombre: nombre, 'Dirección': dir,
+        Localidad: '', Lat: '', Lng: '', 'Teléfono': '', Contacto: '', Notas: '',
+        _esNueva: true, _matchedId: null, _ultimaVisita: ''
+      });
+    }
+  }
+
+  if (!paradas.length) { toast('No se pudieron parsear las líneas'); return; }
+
+  // Detectar duplicados: misma DB matcheada por dos entradas distintas
+  const dupIds = new Set(
+    Object.entries(matchCounts).filter(([,nombres]) => nombres.length > 1).map(([id]) => id)
+  );
+
+  // También detectar colisión con paradas ya existentes en el reparto
+  const enReparto = new Set(S.editReparto.paradas.map(p => p['ID_Ferretería']||p.id_ferreteria||p.ID));
+
+  mostrarPreviewParaEdit(paradas, dupIds, enReparto);
+}
+
+function mostrarPreviewParaEdit(paradas, dupIds, enReparto) {
+  const html = paradas.map((p, i) => {
+    const esDup = dupIds.has(p._matchedId);
+    const yaEsta = !p._esNueva && enReparto.has(p.ID);
+    const tags = [
+      p._esNueva ? `<span style="background:#ede9fe;color:#6d28d9;border-radius:4px;padding:1px 6px;font-size:10px;margin-left:5px">Nueva</span>` : '',
+      ultimaVisitaBadge(p._ultimaVisita),
+      esDup ? `<span style="background:#fee2e2;color:#991b1b;border-radius:4px;padding:1px 6px;font-size:10px;margin-left:5px">⚠ Posible duplicado</span>` : '',
+      yaEsta ? `<span style="background:#f3f4f6;color:#6b7280;border-radius:4px;padding:1px 6px;font-size:10px;margin-left:5px">Ya en reparto</span>` : ''
+    ].join('');
+    return `
+<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+  <input type="checkbox" id="pe-${i}" ${yaEsta?'':'checked'} style="margin-top:3px;flex-shrink:0">
+  <div style="flex:1;min-width:0">
+    <div style="font-weight:600;font-size:13px;flex-wrap:wrap">${esc(p.Nombre)}${tags}</div>
+    <div style="font-size:11px;color:var(--text2)">${esc(p['Dirección'])}</div>
+  </div>
+</div>`;
+  }).join('');
+
+  const hasDups = dupIds.size > 0;
+  const dupMsg = hasDups ? `<div style="background:#fef3c7;border:1px solid #fbbf24;border-radius:8px;padding:10px;margin-bottom:12px;font-size:13px">⚠️ <strong>Posibles duplicados detectados.</strong> Revisá las marcadas y desmarcá las repetidas.</div>` : '';
+
+  window._editParadasTemp = paradas;
+  modal(`
+<div class="modal-title">Confirmar paradas</div>
+${dupMsg}
+<div style="font-size:12px;color:var(--muted);margin-bottom:8px">Desmarcá las que NO querés agregar</div>
+<div style="max-height:320px;overflow-y:auto">${html}</div>
 <div style="display:flex;gap:8px;margin-top:14px">
-  <button class="btn bp" onclick="confirmAddToReparto()">Confirmar</button>
-  <button class="btn bgh" onclick="renderEditModal()">Cancelar</button>
-</div>`); }
+  <button class="btn bp" onclick="confirmarParaEdit()">Agregar seleccionadas</button>
+  <button class="btn bgh" onclick="openAddToReparto()">← Volver</button>
+</div>`);
+}
+
+function confirmarParaEdit() {
+  const paradas = window._editParadasTemp || [];
+  const enReparto = new Set(S.editReparto.paradas.map(p => p['ID_Ferretería']||p.id_ferreteria||p.ID));
+  paradas.forEach((p, i) => {
+    const cb = document.getElementById('pe-' + i);
+    if (!cb || !cb.checked) return;
+    if (!p._esNueva && enReparto.has(p.ID)) { toast(`${p.Nombre} ya está en el reparto`); return; }
+    S.editReparto.paradas.push({
+      Nombre: p.Nombre, 'Dirección': p['Dirección'], Localidad: '',
+      'Teléfono': p['Teléfono']||'', Contacto: p.Contacto||'', Notas: p.Notas||'',
+      Lat: p.Lat||'', Lng: p.Lng||'',
+      'ID_Ferretería': p._esNueva ? null : p.ID,
+      Estado: 'pendiente', _esNueva: p._esNueva
+    });
+  });
+  window._editParadasTemp = null;
+  renderEditModal();
+  toast('Paradas agregadas ✓');
+}
 
 function renderAddSelItems(q) {
   const existing = new Set(S.editReparto.paradas.map(p => p['ID_Ferretería']||p.id_ferreteria||p.ID));
@@ -1054,7 +1193,7 @@ function renderAddSelItems(q) {
 <label class="chk-item">
   <input type="checkbox" data-id="${esc(f.ID)}">
   <div>
-    <div style="font-weight:600;font-size:14px">${esc(f.Nombre)}</div>
+    <div style="font-weight:600;font-size:14px">${esc(f.Nombre)}${ultimaVisitaBadge(f.UltimaVisita||f['UltimaVisita'])}</div>
     <div style="font-size:12px;color:var(--text2)">${esc(f['Dirección']||'')} · ${esc(f.Localidad||'')}</div>
   </div>
 </label>`).join(''); }
