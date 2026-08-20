@@ -24,7 +24,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 /* TABS */
 .tab-bar{background:#fff;border-bottom:1px solid var(--border);padding:8px 12px;display:flex;gap:6px}
-.tab{flex:1;padding:9px 4px;border-radius:8px;border:none;background:var(--bg);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+.tab{flex:1;padding:9px 4px;border-radius:8px;border:none;background:var(--bg);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
 .tab.on{background:var(--blue);color:#fff}
 
 /* CONTENT */
@@ -53,9 +53,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .fld textarea{resize:vertical;min-height:72px}
 
 /* FERRETERÍA LIST ITEMS */
-.fi{background:#fff;border-radius:10px;padding:13px 14px;margin-bottom:7px;display:flex;align-items:center;gap:10px;border:1.5px solid transparent;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.fi{background:#fff;border-radius:10px;padding:13px 14px;margin-bottom:7px;display:flex;align-items:center;gap:10px;border:1.5px solid transparent;box-shadow:0 1px 2px rgba(0,0,0,.06);cursor:pointer}
 .fi:active{border-color:var(--blue)}
-.fi.sel{border-color:var(--blue);background:#EFF6FF}
 .fi-name{font-weight:600;font-size:15px}
 .fi-meta{font-size:13px;color:var(--text2);margin-top:2px}
 
@@ -70,6 +69,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .badge{padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
 .b-activo{background:#D1FAE5;color:#065F46}
 .b-completado{background:#E5E7EB;color:var(--text2)}
+
+/* PIPELINE BADGES */
+.badge-prospecto{background:#F3F4F6;color:#374151}
+.badge-visitado{background:#DBEAFE;color:#1D4ED8}
+.badge-interesado{background:#FEF3C7;color:#92400E}
+.badge-cliente{background:#D1FAE5;color:#065F46}
+.badge-perdido{background:#FEE2E2;color:#991B1B}
+
+/* KPI TILES */
+.kpi-row{display:flex;gap:10px;padding:2px 0 12px;min-width:max-content}
+.kpi-tile{border-radius:12px;padding:16px 18px;min-width:100px;text-align:center;flex-shrink:0}
+.kpi-num{font-size:32px;font-weight:800;line-height:1}
+.kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:4px;opacity:.9}
+
+/* ALERT CARD */
+.alert-card{background:#FEF3C7;border:1px solid #FDE68A;border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.alert-card:active{opacity:.85}
+
+/* ACTIVITY ITEMS */
+.act-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.act-item:last-child{border-bottom:none}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+.filter-btn.on{background:var(--blue);border-color:var(--blue);color:#fff}
 
 /* PROGRESS */
 .prog{background:var(--border);border-radius:8px;height:8px;overflow:hidden}
@@ -92,9 +118,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .sl-item.current .sl-num{background:var(--blue);color:#fff}
 .sl-item.nocon .sl-num{background:var(--red);color:#fff}
 
-/* MAP */
-#rmap{height:260px;border-radius:12px;margin-bottom:14px;z-index:1}
-
 /* LOADING */
 .loading{display:flex;align-items:center;justify-content:center;padding:60px 20px;color:var(--muted);flex-direction:column;gap:12px}
 .spin{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
@@ -106,8 +129,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 /* MODAL */
 .moverlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:200}
-.modal{background:#fff;border-radius:20px 20px 0 0;padding:22px 18px 40px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto}
-.modal-title{font-size:18px;font-weight:700;margin-bottom:18px}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:22px 18px 40px;width:100%;max-width:640px;max-height:92vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 
 /* CHECKBOX */
 .chk-item{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer}
@@ -133,9 +156,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .fhdr-top{display:flex;align-items:center;gap:10px;margin-bottom:7px}
 .fhdr-rep{font-size:13px;font-weight:600;color:var(--text2)}
 .fhdr-prog{font-size:12px;color:var(--muted)}
-.fhdr-list-btn{background:none;border:none;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;border-radius:6px;background:var(--bg)}
+.fhdr-list-btn{background:var(--bg);border:none;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;border-radius:6px}
 
-/* NAV LINK */
+/* SECTION DIVIDER */
+.sdiv{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
 a{color:inherit;text-decoration:none}
 .divider{height:1px;background:var(--border);margin:14px 0}
 </style>
@@ -150,29 +175,34 @@ a{color:inherit;text-decoration:none}
 const S = {
   scriptUrl: localStorage.getItem('hzn_url') || 'https://script.google.com/macros/s/AKfycbyFBS6hRwTm6vMBCc0QfA_5QFzkjBov5q6HEdDejTPBq00EctykiIDVhhPFXqUSyJOSSg/exec',
   view: 'loading',        // loading | setup | admin | field-entry | field
-  adminTab: 0,            // 0=ferreterias 1=nuevo-reparto 2=repartos
+  adminTab: 0,            // 0=dashboard 1=ferreterias 2=nuevo-reparto 3=repartos
   ferreterias: [],
   repartos: [],
+  dashStats: null,
+  // ferreterias tab
+  ferFilter: 'todos',
+  search: '',
+  ferreteriaDetalle: null,
+  historialDetalle: null,
+  editFerreteria: null,
   // route builder
   pasteText: '',
   routeOrdered: [],
   repNombre: '',
   repFecha: '',
-  startPoint: null,   // {lat, lng, label}
+  startPoint: null,
   // edit reparto
-  editReparto: null,   // {id, nombre, fecha, paradas:[...]}
+  editReparto: null,
   // field
   reparto: null,
   paradaIdx: 0,
-  fieldTab: 'parada',     // parada | lista
-  search: '',
-  editFerreteria: null,
+  fieldTab: 'parada',
 };
 
 // ── API ────────────────────────────────────────────────────
 async function apiFetch(action, params = {}) {
   if (!S.scriptUrl) throw new Error('URL de script no configurada');
-  const reads = ['getFerreterias','getRepartos','getReparto'];
+  const reads = ['getFerreterias','getRepartos','getReparto','getDashboard','getHistorialFerreteria','getParaRevisita'];
   try {
     if (reads.includes(action)) {
       const u = new URL(S.scriptUrl);
@@ -186,125 +216,16 @@ async function apiFetch(action, params = {}) {
       const r = await fetch(S.scriptUrl, {
         method:'POST', redirect:'follow',
         body: JSON.stringify({action, ...params}),
-        headers:{'Content-Type':'text/plain'} // avoid preflight
+        headers:{'Content-Type':'text/plain'}
       });
       const d = await r.json();
       if (!d.success) throw new Error(d.error || 'Error servidor');
       return d.data;
     }
   } catch(e) {
-    if (e.message.includes('fetch')) throw new Error('Sin conexión. Verificá internet y la URL del script.');
+    if (e.message && e.message.includes('fetch')) throw new Error('Sin conexión. Verificá internet y la URL del script.');
     throw e;
   }
-}
-
-// ── GEOCODING ─────────────────────────────────────────────
-async function geocode(dir, loc) {
-  const q = `${dir}, ${loc}, Buenos Aires, Argentina`;
-  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1&countrycodes=ar`;
-  try {
-    const r = await fetch(url, {headers:{'Accept-Language':'es'}});
-    const d = await r.json();
-    if (d[0]) return {lat: parseFloat(d[0].lat), lng: parseFloat(d[0].lon)};
-  } catch(e){}
-  return null;
-}
-
-// ── GEOCODING MASIVO ──────────────────────────────────────
-async function geocodeAndSaveAll(list) {
-  const needs = list.filter(f => !f.Lat || !f.Lng);
-  if (!needs.length) return;
-  for (let i = 0; i < needs.length; i++) {
-    const f = needs[i];
-    toast(`Geocodificando ${i+1}/${needs.length}: ${f.Nombre}...`, 5000);
-    const coords = await geocode(f.Dirección, f.Localidad);
-    if (coords) {
-      f.Lat = coords.lat; f.Lng = coords.lng;
-      try {
-        await apiFetch('saveFerreteria', {
-          id: f.ID, nombre: f.Nombre, direccion: f.Dirección,
-          localidad: f.Localidad, zona: f.Zona||'',
-          telefono: f.Teléfono||'', contacto: f.Contacto||'',
-          notas: f.Notas||'', lat: coords.lat, lng: coords.lng
-        });
-        const si = S.ferreterias.findIndex(x => x.ID === f.ID);
-        if (si >= 0) { S.ferreterias[si].Lat = coords.lat; S.ferreterias[si].Lng = coords.lng; }
-      } catch(e) {}
-    }
-    if (i < needs.length - 1) await new Promise(r => setTimeout(r, 1100)); // Nominatim: 1 req/s
-  }
-}
-
-// ── ROUTING ───────────────────────────────────────────────
-function haversine(a, b) {
-  const R=6371, dLat=(b.lat-a.lat)*Math.PI/180, dLng=(b.lng-a.lng)*Math.PI/180;
-  const x = Math.sin(dLat/2)**2 + Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;
-  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
-}
-
-function totalDist(route) {
-  let d=0;
-  for(let i=0;i<route.length-1;i++) d+=haversine(route[i],route[i+1]);
-  return d;
-}
-
-function nnFrom(pts, startIdx) {
-  const vis=[...pts];
-  const r=[vis.splice(startIdx,1)[0]];
-  while(vis.length){
-    const cur=r[r.length-1];
-    let bi=0, bd=Infinity;
-    vis.forEach((p,i)=>{ const d=haversine(cur,p); if(d<bd){bd=d;bi=i;} });
-    r.push(vis.splice(bi,1)[0]);
-  }
-  return r;
-}
-
-function twoOpt(r) {
-  const n=r.length;
-  let improved=true;
-  while(improved){
-    improved=false;
-    for(let i=0;i<n-1;i++){
-      for(let j=i+2;j<n;j++){
-        const before=haversine(r[i],r[i+1])+(j+1<n?haversine(r[j],r[j+1]):0);
-        const after =haversine(r[i],r[j])  +(j+1<n?haversine(r[i+1],r[j+1]):0);
-        if(after<before-0.0001){
-          r.splice(i+1,j-i,...r.slice(i+1,j+1).reverse());
-          improved=true;
-        }
-      }
-    }
-  }
-  return r;
-}
-
-function nearestNeighbor(list, startFrom=null) {
-  const pts=list.filter(f=>f.Lat&&f.Lng).map(f=>({...f,lat:+f.Lat,lng:+f.Lng}));
-  const noCoords=list.filter(f=>!f.Lat||!f.Lng);
-  if(pts.length<2) return [...pts,...noCoords];
-  let best=null;
-  if(startFrom){
-    // Punto de inicio fijo: NN desde el depot
-    const vis=[...pts]; const r=[]; let cur=startFrom;
-    while(vis.length){
-      let bi=0,bd=Infinity;
-      vis.forEach((p,i)=>{const d=haversine(cur,p);if(d<bd){bd=d;bi=i;}});
-      r.push(vis.splice(bi,1)[0]);
-      cur=r[r.length-1];
-    }
-    best=twoOpt(r);
-  } else {
-    // Sin punto fijo: probar todos los orígenes
-    let bestD=Infinity;
-    for(let s=0;s<pts.length;s++){
-      const r=nnFrom([...pts],s);
-      const d=totalDist(r);
-      if(d<bestD){bestD=d;best=r;}
-    }
-    best=twoOpt(best);
-  }
-  return [...best,...noCoords];
 }
 
 // ── GOOGLE MAPS ROUTE URL ────────────────────────────────
@@ -324,80 +245,105 @@ function buildGoogleMapsUrl(list, startPt) {
   return `https://www.google.com/maps/dir/${stops.join('/')}`;
 }
 
-// ── MAP ───────────────────────────────────────────────────
-let map=null, mapLayers=[];
-function initMap(id) {
-  if(map){map.remove();map=null;}
-  map = L.map(id).setView([-34.52,-58.72],11);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:18}).addTo(map);
-}
-function drawRoute(list, startPt=null) {
-  if(!map) return;
-  mapLayers.forEach(l=>map.removeLayer(l));
-  mapLayers=[];
-  const coords=[];
-  if(startPt){
-    const ll=[startPt.lat,startPt.lng];
-    coords.push(ll);
-    const m=L.circleMarker(ll,{radius:13,fillColor:'#16A34A',color:'#fff',weight:2.5,fillOpacity:1}).addTo(map);
-    m.bindTooltip('🏠 Salida: '+startPt.label,{permanent:false,direction:'top'});
-    mapLayers.push(m);
-  }
-  list.forEach((f,i) => {
-    if(!f.Lat||!f.Lng) return;
-    const ll=[+f.Lat,+f.Lng];
-    coords.push(ll);
-    const m=L.circleMarker(ll,{radius:11,fillColor:'#2563EB',color:'#fff',weight:2.5,fillOpacity:1}).addTo(map);
-    m.bindTooltip(`${i+1}. ${f.Nombre}`,{permanent:false,direction:'top'});
-    mapLayers.push(m);
+function attachSort() {
+  const list = document.getElementById('rlist');
+  if (!list || !window.Sortable) return;
+  Sortable.create(list, {
+    animation: 140, handle: '.ri-drag',
+    onEnd: () => {
+      const ids = [...list.querySelectorAll('.ri')].map(el => el.dataset.id);
+      S.routeOrdered = ids.map(id => S.routeOrdered.find(f => f.ID === id));
+      list.querySelectorAll('.ri-num').forEach((el,i) => el.textContent = i + 1);
+    }
   });
-  if(coords.length>1){
-    const ln=L.polyline(coords,{color:'#2563EB',weight:2,opacity:.5,dashArray:'6 4'}).addTo(map);
-    mapLayers.push(ln);
-    map.fitBounds(L.latLngBounds(coords),{padding:[20,20]});
-  } else if(coords.length===1) map.setView(coords[0],14);
 }
 
 // ── TOAST & MODAL ─────────────────────────────────────────
-let toastT=null;
-function toast(msg,dur=3000){
+let toastT = null;
+function toast(msg, dur=3000) {
   document.querySelector('.toast')?.remove();
-  const el=document.createElement('div');
-  el.className='toast';el.textContent=msg;
+  const el = document.createElement('div');
+  el.className = 'toast'; el.textContent = msg;
   document.body.appendChild(el);
-  clearTimeout(toastT);toastT=setTimeout(()=>el?.remove(),dur);
+  clearTimeout(toastT); toastT = setTimeout(() => el?.remove(), dur);
 }
-function modal(html){
+function modal(html) {
   document.getElementById('mov')?.remove();
-  const ov=document.createElement('div');
-  ov.id='mov';ov.className='moverlay';
-  ov.innerHTML=`<div class="modal">${html}</div>`;
-  ov.addEventListener('click',e=>{if(e.target===ov)closeModal();});
+  const ov = document.createElement('div');
+  ov.id = 'mov'; ov.className = 'moverlay';
+  ov.innerHTML = `<div class="modal">${html}</div>`;
+  ov.addEventListener('click', e => { if (e.target === ov) closeModal(); });
   document.body.appendChild(ov);
 }
-function closeModal(){document.getElementById('mov')?.remove();}
+function closeModal() { document.getElementById('mov')?.remove(); }
 
 // ── UTILS ─────────────────────────────────────────────────
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function empty(ico,txt){return `<div class="empty"><div class="eico">${ico}</div><div>${txt}</div></div>`;}
-function fechaStr(f){
-  try{return new Date(f).toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});}catch(e){return f||'';}
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function empty(ico, txt) {
+  return `<div class="empty"><div class="eico">${ico}</div><div>${txt}</div></div>`;
+}
+function fechaStr(f) {
+  try { return new Date(f).toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'}); }
+  catch(e) { return f||''; }
+}
+
+function pipelineBadge(estado) {
+  const e = estado || 'Prospecto';
+  const cls = {
+    'Prospecto':'prospecto','Visitado':'visitado','Interesado':'interesado',
+    'Cliente':'cliente','Perdido':'perdido'
+  }[e] || 'prospecto';
+  return `<span class="badge badge-${cls}">${esc(e)}</span>`;
+}
+
+function normalizarNombre(s) {
+  return (s||'').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z0-9\s]/g,'')
+    .replace(/\s+/g,' ').trim();
+}
+
+function palabrasSignificativas(s) {
+  const stop = new Set(['la','el','las','los','de','del','ferreteria','ferreria',
+    'y','e','a','en','san','gral','general','norte','sur','este','oeste','centro']);
+  return normalizarNombre(s).split(' ').filter(w => w.length > 2 && !stop.has(w));
+}
+
+function matchFerreteria(nombre) {
+  const palabras = palabrasSignificativas(nombre);
+  if (!palabras.length) return null;
+  let bestMatch = null, bestScore = 0;
+  for (const f of S.ferreterias) {
+    const palabrasF = palabrasSignificativas(f.Nombre);
+    if (!palabrasF.length) continue;
+    const matches = palabras.filter(w =>
+      palabrasF.some(wf => wf === w || wf.startsWith(w) || w.startsWith(wf))
+    );
+    const score = matches.length / Math.max(palabras.length, palabrasF.length);
+    if (score >= 0.6 && score > bestScore) {
+      bestScore = score;
+      bestMatch = f;
+    }
+  }
+  return bestMatch;
 }
 
 // ── RENDER MAIN ───────────────────────────────────────────
-function render(){
-  const app=document.getElementById('app');
-  if(S.view==='loading') { app.innerHTML=`<div class="loading"><div class="spin"></div><div>Cargando...</div></div>`; return; }
-  if(S.view==='setup')   { app.innerHTML=renderSetup(); return; }
-  if(S.view==='field-entry') { app.innerHTML=renderFieldEntry(); return; }
-  if(S.view==='field')   { app.innerHTML=renderField(); return; }
-  if(S.view==='admin')   { app.innerHTML=renderAdmin(); }
+function render() {
+  const app = document.getElementById('app');
+  if (S.view === 'loading')      { app.innerHTML = `<div class="loading"><div class="spin"></div><div>Cargando...</div></div>`; return; }
+  if (S.view === 'setup')        { app.innerHTML = renderSetup(); return; }
+  if (S.view === 'field-entry')  { app.innerHTML = renderFieldEntry(); return; }
+  if (S.view === 'field')        { app.innerHTML = renderField(); return; }
+  if (S.view === 'admin')        { app.innerHTML = renderAdmin(); }
 }
 
 // ════════════════════════════════════════════════════════
 // SETUP SCREEN
 // ════════════════════════════════════════════════════════
-function renderSetup(){return `
+function renderSetup() { return `
 <div class="center-screen">
   <div class="cs-logo">🔧</div>
   <div class="cs-title">HZN Repartos</div>
@@ -410,17 +356,17 @@ function renderSetup(){return `
   <div style="margin-top:20px;font-size:13px;color:var(--muted)">
     <a href="#" onclick="showSetupHelp();return false;" style="color:var(--blue)">¿Cómo configuro el Apps Script?</a>
   </div>
-</div>`;}
+</div>`; }
 
-function saveSetup(){
-  const url=document.getElementById('su').value.trim();
-  if(!url){toast('Ingresá la URL'); return;}
-  S.scriptUrl=url;
-  localStorage.setItem('hzn_url',url);
+function saveSetup() {
+  const url = document.getElementById('su').value.trim();
+  if (!url) { toast('Ingresá la URL'); return; }
+  S.scriptUrl = url;
+  localStorage.setItem('hzn_url', url);
   loadApp();
 }
 
-function showSetupHelp(){modal(`
+function showSetupHelp() { modal(`
 <div class="modal-title">Configurar Apps Script</div>
 <div style="font-size:14px;line-height:1.8;color:var(--text2)">
 <strong>1.</strong> Abrí <a href="https://script.google.com" target="_blank" style="color:var(--blue)">script.google.com</a><br>
@@ -431,12 +377,12 @@ function showSetupHelp(){modal(`
 <strong>6.</strong> Tipo: <em>Aplicación web</em> · Ejecutar como: <em>Yo</em> · Acceso: <em>Cualquier usuario</em><br>
 <strong>7.</strong> Autorizá y copiá la URL → pegala acá
 </div>
-<button class="btn bp" style="margin-top:16px" onclick="closeModal()">Entendido</button>`);}
+<button class="btn bp" style="margin-top:16px" onclick="closeModal()">Entendido</button>`); }
 
 // ════════════════════════════════════════════════════════
-// ADMIN
+// ADMIN SHELL
 // ════════════════════════════════════════════════════════
-function renderAdmin(){return `
+function renderAdmin() { return `
 <div class="hdr">
   <div class="hdr-icon">🔧</div>
   <h1>HZN Repartos</h1>
@@ -446,137 +392,334 @@ function renderAdmin(){return `
   </div>
 </div>
 <div class="tab-bar">
-  ${['🏪 Ferreterías','📍 Nuevo reparto','📋 Repartos'].map((t,i)=>`
-  <button class="tab ${S.adminTab===i?'on':''}" onclick="setTab(${i})">${t}</button>`).join('')}
+  ${[['🏠','Inicio'],['🏪','Ferreterías'],['🗺','Reparto'],['📋','Repartos']].map(([ico,lbl],i) => `
+  <button class="tab ${S.adminTab===i?'on':''}" onclick="setTab(${i})">${ico} ${lbl}</button>`).join('')}
 </div>
 <div class="content">
-  ${S.adminTab===0?renderTabFerreterias():''}
-  ${S.adminTab===1?renderTabNuevoReparto():''}
-  ${S.adminTab===2?renderTabRepartos():''}
-</div>`;}
+  ${S.adminTab===0 ? renderDashboard()         : ''}
+  ${S.adminTab===1 ? renderTabFerreterias()    : ''}
+  ${S.adminTab===2 ? renderTabNuevoReparto()   : ''}
+  ${S.adminTab===3 ? renderTabRepartos()       : ''}
+</div>`; }
 
-function setTab(i){
-  S.adminTab=i; S.search='';
+function setTab(i) {
+  S.adminTab = i;
+  if (i !== 1) S.search = '';
   render();
-  if(i===1 && S.routeOrdered.length>0) setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered,S.startPoint);attachSort();},150);
+  if (i === 0 && !S.dashStats) {
+    loadDashboardStats().then(() => render());
+  }
+  if (i === 2 && S.routeOrdered.length > 0) setTimeout(() => attachSort(), 150);
 }
 
-function showSettings(){modal(`
+function showSettings() { modal(`
 <div class="modal-title">⚙️ Configuración</div>
 <div class="fld"><label>URL del Apps Script</label>
 <input id="cfg-url" value="${esc(S.scriptUrl)}" style="font-size:12px"></div>
 <button class="btn bp" onclick="saveSettings()">Guardar</button>
 <div class="divider"></div>
 <button class="btn bgh" onclick="closeModal();switchToField()">📱 Ir al modo repartidor</button>
-<button class="btn bgh" style="margin-top:8px" onclick="closeModal()">Cancelar</button>`);}
+<button class="btn bgh" style="margin-top:8px" onclick="closeModal()">Cancelar</button>`); }
 
-function saveSettings(){
-  const url=document.getElementById('cfg-url').value.trim();
-  if(url){S.scriptUrl=url;localStorage.setItem('hzn_url',url);}
-  closeModal();toast('Configuración guardada ✓');
+function saveSettings() {
+  const url = document.getElementById('cfg-url').value.trim();
+  if (url) { S.scriptUrl = url; localStorage.setItem('hzn_url', url); }
+  closeModal(); toast('Configuración guardada ✓');
 }
 
-function switchToField(){S.view='field-entry';render();}
+function switchToField() { S.view = 'field-entry'; render(); }
 
-// ── TAB FERRETERÍAS ───────────────────────────────────────
-function renderTabFerreterias(){
-  const q=S.search.toLowerCase();
-  const list=q?S.ferreterias.filter(f=>
-    (f.Nombre||'').toLowerCase().includes(q)||(f.Localidad||'').toLowerCase().includes(q)||(f.Zona||'').toLowerCase().includes(q)
-  ):S.ferreterias;
-  return `
-<input class="sbox" placeholder="🔍 Buscar..." value="${esc(S.search)}" oninput="S.search=this.value;renderFList()">
-<button class="btn bp" style="margin-bottom:14px" onclick="openFForm(null)">+ Agregar ferretería</button>
-<div id="flist">${renderFItems(list)}</div>`;}
-
-function renderFItems(list){
-  if(!list.length) return empty('🏪', S.ferreterias.length?'Sin resultados':'No hay ferreterías. Agregá la primera.');
-  return list.map(f=>`
-<div class="fi" onclick="openFForm('${esc(f.ID)}')">
-  <div style="flex:1">
-    <div class="fi-name">${esc(f.Nombre)}</div>
-    <div class="fi-meta">${esc(f.Dirección)} · ${esc(f.Localidad)}${f.Zona?` · ${esc(f.Zona)}`:''}</div>
-    ${f.Contacto?`<div class="fi-meta">👤 ${esc(f.Contacto)}${f.Teléfono?` · ${esc(f.Teléfono)}`:''}</div>`:''}
-  </div>
-  <span style="font-size:14px" title="${f.Lat?'Geolocalizada':'Sin coordenadas'}">
-    ${f.Lat?'🟢':'⚪'}
-  </span>
-</div>`).join('');}
-
-function renderFList(){
-  const q=S.search.toLowerCase();
-  const list=q?S.ferreterias.filter(f=>
-    (f.Nombre||'').toLowerCase().includes(q)||(f.Localidad||'').toLowerCase().includes(q)||(f.Zona||'').toLowerCase().includes(q)
-  ):S.ferreterias;
-  const el=document.getElementById('flist');
-  if(el) el.innerHTML=renderFItems(list);
+// ════════════════════════════════════════════════════════
+// TAB 0 — DASHBOARD
+// ════════════════════════════════════════════════════════
+async function loadDashboardStats() {
+  try { S.dashStats = await apiFetch('getDashboard'); }
+  catch(e) { S.dashStats = null; }
 }
 
-function openFForm(id){
-  const f=id?S.ferreterias.find(x=>x.ID===id):null;
-  S.editFerreteria=f;
-  modal(`
-<div class="modal-title">${id?'Editar':'Nueva'} ferretería</div>
-<div class="fld"><label>Nombre *</label><input id="fn" value="${esc(f?.Nombre)}" placeholder="Ferretería El Martillo"></div>
-<div class="fld"><label>Dirección *</label><input id="fd" value="${esc(f?.Dirección)}" placeholder="Av. San Martín 1234"></div>
-<div class="fld"><label>Localidad *</label><input id="fl" value="${esc(f?.Localidad)}" placeholder="San Miguel"></div>
-<div class="fld"><label>Zona</label><input id="fz" value="${esc(f?.Zona)}" placeholder="Norte, Centro..."></div>
-<div class="fld"><label>Teléfono</label><input id="ft" value="${esc(f?.Teléfono)}" type="tel" placeholder="11-1234-5678"></div>
-<div class="fld"><label>Contacto (nombre)</label><input id="fc" value="${esc(f?.Contacto)}" placeholder="Juan"></div>
-<div class="fld"><label>Notas internas</label><textarea id="fno">${esc(f?.Notas)}</textarea></div>
-<div style="display:flex;gap:8px;margin-top:6px">
-  <button class="btn bp" onclick="saveFerreteria('${id||''}')">Guardar</button>
-  ${id?`<button class="btn br bsm" onclick="deleteFerreteria('${id}')">🗑</button>`:''}
-</div>
-<button class="btn bgh" style="margin-top:8px" onclick="closeModal()">Cancelar</button>`);}
+function kpiTile(num, label, bg, color) {
+  return `<div class="kpi-tile" style="background:${bg};color:${color}">
+    <div class="kpi-num">${num}</div>
+    <div class="kpi-label">${label}</div>
+  </div>`;
+}
 
-async function saveFerreteria(id){
-  const nombre=document.getElementById('fn').value.trim();
-  const dir=document.getElementById('fd').value.trim();
-  const loc=document.getElementById('fl').value.trim();
-  if(!nombre||!dir||!loc){toast('Nombre, dirección y localidad son obligatorios');return;}
-
-  const f=S.editFerreteria;
-  let lat=f?.Lat||'', lng=f?.Lng||'';
-
-  // Geocode si cambió la dirección o no tiene coords
-  if(!lat || (f&&(f.Dirección!==dir||f.Localidad!==loc))){
-    toast('Geocodificando...⏳',6000);
-    const coords=await geocode(dir,loc);
-    if(coords){lat=coords.lat;lng=coords.lng;}
-    else toast('No se pudo geolocalizar (la ruta igual funciona)');
+function renderDashboard() {
+  if (!S.dashStats) {
+    return `<div class="loading"><div class="spin"></div><div>Cargando dashboard...</div></div>`;
   }
+  const st   = S.dashStats;
+  const pipe = st.pipeline || {};
+  const tot  = st.total || 0;
+  const rec  = st.recientes || [];
+  const pr   = st.paraRevisitar || 0;
 
-  const data={
-    id, nombre, direccion:dir, localidad:loc,
-    zona:document.getElementById('fz').value.trim(),
-    telefono:document.getElementById('ft').value.trim(),
-    contacto:document.getElementById('fc').value.trim(),
-    notas:document.getElementById('fno').value.trim(),
-    lat, lng
+  return `
+<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:4px">
+  <div class="kpi-row">
+    ${kpiTile(tot,         'Total',      '#1E40AF','#fff')}
+    ${kpiTile(pipe.Prospecto||0,  'Prospectos', '#6B7280','#fff')}
+    ${kpiTile(pipe.Visitado||0,   'Visitados',  '#3B82F6','#fff')}
+    ${kpiTile(pipe.Interesado||0, 'Interesados','#D97706','#fff')}
+    ${kpiTile(pipe.Cliente||0,    'Clientes',   '#16A34A','#fff')}
+  </div>
+</div>
+
+${pr > 0 ? `
+<div class="alert-card" onclick="S.adminTab=1;S.ferFilter='revisitar';render()">
+  <span style="font-size:20px">⚠️</span>
+  <div style="flex:1">
+    <div style="font-weight:700;color:#92400E">${pr} ${pr===1?'ferretería':'ferreterías'} para revisitar</div>
+    <div style="font-size:12px;color:#B45309;margin-top:2px">Sin visita en más de 30 días · Tocá para ver</div>
+  </div>
+  <span style="color:#92400E;font-size:18px">→</span>
+</div>` : ''}
+
+<div class="card">
+  <div class="sdiv" style="margin-top:0">Actividad reciente</div>
+  ${rec.length ? rec.map(a => `
+  <div class="act-item">
+    <span style="font-size:18px">${a.estado==='entregado'?'✅':'❌'}</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.nombre)}</div>
+      <div style="font-size:12px;color:var(--text2)">${esc(a.estado)} · ${esc(String(a.timestamp||'').split(' ')[0]||'')}</div>
+    </div>
+    ${a.nota?`<span title="${esc(a.nota)}" style="font-size:14px">💬</span>`:''}
+  </div>`).join('') : `
+  <div style="color:var(--muted);font-size:14px;text-align:center;padding:20px 0">
+    Sin actividad reciente aún
+  </div>`}
+</div>
+
+<button class="btn bgh" onclick="loadDashboardStats().then(()=>render())">↻ Actualizar</button>`;
+}
+
+// ════════════════════════════════════════════════════════
+// TAB 1 — FERRETERÍAS
+// ════════════════════════════════════════════════════════
+function filteredFerreterias() {
+  let list = S.ferreterias;
+  const f  = S.ferFilter;
+  if (f === 'prospectos')  list = list.filter(x => !x.Estado || x.Estado === 'Prospecto');
+  else if (f === 'interesados') list = list.filter(x => x.Estado === 'Interesado');
+  else if (f === 'clientes')    list = list.filter(x => x.Estado === 'Cliente');
+  else if (f === 'revisitar') {
+    const ids = new Set(S.dashStats?.paraRevisitarIds || []);
+    list = list.filter(x => ids.has(String(x.ID)));
+  }
+  const q = S.search.toLowerCase();
+  if (q) list = list.filter(x =>
+    (x.Nombre||'').toLowerCase().includes(q) ||
+    (x['Dirección']||'').toLowerCase().includes(q) ||
+    (x.Localidad||'').toLowerCase().includes(q)
+  );
+  return list;
+}
+
+function renderTabFerreterias() {
+  const filters = [
+    ['todos','Todos'],['prospectos','Prospectos'],['interesados','Interesados'],
+    ['clientes','Clientes'],['revisitar','Revisitar']
+  ];
+  const list = filteredFerreterias();
+  return `
+<div class="filter-bar">
+  ${filters.map(([v,l]) => `
+  <button class="filter-btn ${S.ferFilter===v?'on':''}" onclick="S.ferFilter='${v}';renderFList()">${l}</button>`).join('')}
+</div>
+<input class="sbox" placeholder="🔍 Buscar..." value="${esc(S.search)}" oninput="S.search=this.value;renderFList()">
+<button class="btn bp" style="margin-bottom:14px" onclick="openFForm()">+ Agregar ferretería</button>
+<div id="flist">${renderFItems(list)}</div>`; }
+
+function renderFItems(list) {
+  if (!list.length) return empty('🏪', S.ferreterias.length ? 'Sin resultados para este filtro' : 'No hay ferreterías. Agregá la primera.');
+  const lv = S.dashStats?.lastVisits || {};
+  return list.map(f => {
+    const ulv = lv[String(f.ID)];
+    return `
+<div class="fi" onclick="openDetalleFerreteria('${esc(f.ID)}')">
+  <div style="flex:1;min-width:0">
+    <div class="fi-name">${esc(f.Nombre)}</div>
+    <div class="fi-meta">${esc(f['Dirección']||'')}${f.Localidad?` · ${esc(f.Localidad)}`:''}</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:5px">
+      ${pipelineBadge(f.Estado||'Prospecto')}
+      ${ulv?`<span style="font-size:11px;color:var(--muted)">Visitada ${esc(ulv)}</span>`:`<span style="font-size:11px;color:var(--muted)">Nunca visitada</span>`}
+    </div>
+  </div>
+  <span style="font-size:18px;color:var(--muted)">›</span>
+</div>`; }).join(''); }
+
+function renderFList() {
+  const el = document.getElementById('flist');
+  if (el) el.innerHTML = renderFItems(filteredFerreterias());
+}
+
+// ── Formulario nueva ferretería (simple, sin historial) ───
+function openFForm() {
+  modal(`
+<div class="modal-title">Nueva ferretería</div>
+<div class="fld"><label>Nombre *</label><input id="fn" placeholder="Ferretería El Martillo"></div>
+<div class="fld"><label>Dirección *</label><input id="fd" placeholder="Av. San Martín 1234"></div>
+<div class="fld"><label>Localidad *</label><input id="fl" placeholder="San Miguel"></div>
+<div class="fld"><label>Zona</label><input id="fz" placeholder="Norte, Centro..."></div>
+<div class="fld"><label>Teléfono</label><input id="ft" type="tel" placeholder="11-1234-5678"></div>
+<div class="fld"><label>Contacto (nombre)</label><input id="fc" placeholder="Juan"></div>
+<div class="fld"><label>Notas internas</label><textarea id="fno"></textarea></div>
+<button class="btn bp" onclick="guardarNuevaFerreteria()">Guardar</button>
+<button class="btn bgh" style="margin-top:8px" onclick="closeModal()">Cancelar</button>`); }
+
+async function guardarNuevaFerreteria() {
+  const nombre = document.getElementById('fn').value.trim();
+  const dir    = document.getElementById('fd').value.trim();
+  const loc    = document.getElementById('fl').value.trim();
+  if (!nombre || !dir || !loc) { toast('Nombre, dirección y localidad son obligatorios'); return; }
+  const data = {
+    id: '', nombre, direccion: dir, localidad: loc,
+    zona:     document.getElementById('fz').value.trim(),
+    telefono: document.getElementById('ft').value.trim(),
+    contacto: document.getElementById('fc').value.trim(),
+    notas:    document.getElementById('fno').value.trim(),
+    lat: '', lng: '', estado: 'Prospecto', proximavisita: ''
   };
+  closeModal(); toast('Guardando...');
+  try {
+    await apiFetch('saveFerreteria', data);
+    toast('Guardada ✓');
+    await loadFerreterias();
+    render();
+  } catch(e) { toast('Error: ' + e.message); }
+}
 
-  closeModal();toast('Guardando...');
-  try{
-    await apiFetch('saveFerreteria',data);
+// ── Detalle / edición de ferretería existente ─────────────
+async function openDetalleFerreteria(id) {
+  const f = S.ferreterias.find(x => String(x.ID) === String(id));
+  if (!f) { toast('Ferretería no encontrada'); return; }
+  S.ferreteriaDetalle = {...f};
+  S.historialDetalle = null;
+  modal(renderDetalleModal());
+
+  // Cargar historial en segundo plano
+  try {
+    const hist = await apiFetch('getHistorialFerreteria', {id});
+    S.historialDetalle = hist;
+    const sec = document.getElementById('historial-section');
+    if (sec) sec.innerHTML = renderHistorialSection();
+  } catch(e) {
+    S.historialDetalle = [];
+    const sec = document.getElementById('historial-section');
+    if (sec) sec.innerHTML = `<div style="color:var(--muted);font-size:13px">Error al cargar historial</div>`;
+  }
+}
+
+function renderDetalleModal() {
+  const f = S.ferreteriaDetalle;
+  if (!f) return '';
+  const estados = ['Prospecto','Visitado','Interesado','Cliente','Perdido'];
+  const ea = f.Estado || 'Prospecto';
+  const pv = f.ProximaVisita ? String(f.ProximaVisita).split('T')[0] : '';
+  return `
+<div class="modal-title">${esc(f.Nombre)} ${pipelineBadge(ea)}</div>
+
+<div class="sdiv" style="margin-top:4px">Info</div>
+<div class="fld"><label>Nombre</label><input id="dn" value="${esc(f.Nombre||'')}"></div>
+<div class="fld"><label>Dirección</label><input id="dd" value="${esc(f['Dirección']||'')}"></div>
+<div class="fld"><label>Localidad</label><input id="dl" value="${esc(f.Localidad||'')}"></div>
+<div class="fld"><label>Teléfono</label><input id="dt" type="tel" value="${esc(f['Teléfono']||'')}"></div>
+<div class="fld"><label>Contacto</label><input id="dc" value="${esc(f.Contacto||'')}"></div>
+<div class="fld"><label>Notas</label><textarea id="dno">${esc(f.Notas||'')}</textarea></div>
+
+<div class="sdiv">Pipeline</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+  ${estados.map(e => `
+  <button class="filter-btn ${ea===e?'on':''}" onclick="cambiarEstadoDetalle('${e}')">${e}</button>`).join('')}
+</div>
+
+<div class="sdiv">Próxima visita</div>
+<div class="fld" style="margin-bottom:16px">
+  <input id="dpv" type="date" value="${esc(pv)}">
+</div>
+
+<div class="sdiv">Historial de visitas</div>
+<div id="historial-section">${renderHistorialSection()}</div>
+
+<div style="display:flex;gap:8px;margin-top:20px">
+  <button class="btn bp" onclick="guardarDetalleFerreteria()">Guardar</button>
+  <button class="btn br bsm" onclick="deleteFerreteria('${esc(f.ID)}')">🗑</button>
+</div>
+<button class="btn bgh" style="margin-top:8px" onclick="closeModal()">Cancelar</button>`; }
+
+function renderHistorialSection() {
+  if (S.historialDetalle === null) {
+    return `<div style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;padding:12px 0"><div class="spin" style="width:18px;height:18px;border-width:2px"></div>Cargando...</div>`;
+  }
+  if (!S.historialDetalle.length) {
+    return `<div style="color:var(--muted);font-size:14px;padding:12px 0">Sin visitas registradas todavía</div>`;
+  }
+  return S.historialDetalle.map(h => `
+<div class="act-item">
+  <span style="font-size:18px">${h.estado==='entregado'?'✅':'❌'}</span>
+  <div style="flex:1;min-width:0">
+    <div style="font-weight:600;font-size:14px">${esc(h.timestamp||'')}</div>
+    <div style="font-size:12px;color:var(--text2)">${esc(h.estado)}${h.reparto&&h.reparto.nombre?' · '+esc(h.reparto.nombre):''}</div>
+    ${h.nota?`<div style="font-size:12px;color:var(--amber);margin-top:2px">💬 ${esc(h.nota)}</div>`:''}
+  </div>
+</div>`).join(''); }
+
+function cambiarEstadoDetalle(estado) {
+  if (!S.ferreteriaDetalle) return;
+  S.ferreteriaDetalle.Estado = estado;
+  const mov = document.getElementById('mov');
+  if (mov) {
+    const m = mov.querySelector('.modal');
+    if (m) m.innerHTML = renderDetalleModal();
+    // Restaurar historial ya cargado
+    const sec = document.getElementById('historial-section');
+    if (sec) sec.innerHTML = renderHistorialSection();
+  }
+}
+
+async function guardarDetalleFerreteria() {
+  const f = S.ferreteriaDetalle;
+  if (!f) return;
+  const nombre = document.getElementById('dn')?.value?.trim();
+  const dir    = document.getElementById('dd')?.value?.trim();
+  const loc    = document.getElementById('dl')?.value?.trim();
+  if (!nombre || !dir || !loc) { toast('Nombre, dirección y localidad son obligatorios'); return; }
+  const data = {
+    id: f.ID, nombre, direccion: dir, localidad: loc,
+    zona:     f.Zona || '',
+    telefono: document.getElementById('dt')?.value?.trim() || '',
+    contacto: document.getElementById('dc')?.value?.trim() || '',
+    notas:    document.getElementById('dno')?.value?.trim() || '',
+    lat:      f.Lat || '', lng: f.Lng || '',
+    estado:   f.Estado || 'Prospecto',
+    proximavisita: document.getElementById('dpv')?.value || ''
+  };
+  closeModal(); toast('Guardando...');
+  try {
+    await apiFetch('saveFerreteria', data);
     toast('Guardado ✓');
-    await loadFerreterias();render();
-  }catch(e){toast('Error: '+e.message);}
+    await Promise.all([loadFerreterias(), loadDashboardStats()]);
+    render();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
-async function deleteFerreteria(id){
-  if(!confirm('¿Eliminar esta ferretería?'))return;
+async function deleteFerreteria(id) {
+  if (!confirm('¿Eliminar esta ferretería?')) return;
   closeModal();
-  try{
-    await apiFetch('deleteFerreteria',{id});
+  try {
+    await apiFetch('deleteFerreteria', {id});
     toast('Eliminada');
-    await loadFerreterias();render();
-  }catch(e){toast('Error: '+e.message);}
+    await loadFerreterias();
+    render();
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
-// ── TAB NUEVO REPARTO ────────────────────────────────────
-function renderTabNuevoReparto(){
-  const today=new Date().toISOString().split('T')[0];
+// ════════════════════════════════════════════════════════
+// TAB 2 — NUEVO REPARTO
+// ════════════════════════════════════════════════════════
+function renderTabNuevoReparto() {
+  const today = new Date().toISOString().split('T')[0];
   return `
 <div class="card">
   <div class="fld">
@@ -596,187 +739,193 @@ function renderTabNuevoReparto(){
        <button class="btn bgh bsm" onclick="S.startPoint=null;render()">✕ Quitar</button>`
     : `<div style="display:flex;gap:8px">
         <button class="btn bp bsm" style="flex:1" onclick="useGPS()">📡 Mi ubicación</button>
-        <button class="btn bgh bsm" style="flex:1" onclick="openStartPointModal()">🔍 Ingresar dirección</button>
+        <button class="btn bgh bsm" style="flex:1" onclick="openStartPointModal()">🔍 Dirección</button>
        </div>`
   }
 </div>
 
 <div class="card" style="margin-bottom:12px">
   <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px">📋 Ferreterías del recorrido</div>
-  <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Una por línea · Formato: <strong>Nombre, Dirección completa de Google Maps</strong></div>
-  <textarea id="paste-area" rows="6" style="width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:14px;font-family:inherit;resize:vertical;background:var(--bg);color:var(--text1)" placeholder="FASE, Carlos Tejedor 1182, B1617 Tigre, Provincia de Buenos Aires
+  <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Una por línea · Formato: <strong>Nombre, Dirección completa</strong></div>
+  <textarea id="paste-area" rows="6" style="width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:10px;font-size:14px;font-family:inherit;resize:vertical;background:var(--bg);color:var(--text)" placeholder="FASE, Carlos Tejedor 1182, B1617 Tigre, Provincia de Buenos Aires
 Ferretería Tincho, Riobamba 582, B1617 Gral. Pacheco, Provincia de Buenos Aires" oninput="S.pasteText=this.value">${esc(S.pasteText)}</textarea>
-  <button class="btn bo" style="width:100%;margin-top:10px" onclick="parsearYOptimizar()">⚡ Armar recorrido</button>
+  <button class="btn bo" style="width:100%;margin-top:10px" onclick="parsearYCargar()">⚡ Armar recorrido</button>
 </div>
 
-${S.routeOrdered.length?`
-<div id="rmap"></div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-  <div style="font-size:13px;color:var(--text2)">📍 ${S.routeOrdered.length} paradas · Arrastrá ⠿ para reordenar</div>
-  ${(()=>{const u=buildGoogleMapsUrl(S.routeOrdered,S.startPoint);return u?`<a href="${u}" target="_blank"><button class="btn bp bsm" style="white-space:nowrap">🗺 Ver en Maps</button></a>`:''})()}
+${S.routeOrdered.length ? `
+${(()=>{const u=buildGoogleMapsUrl(S.routeOrdered,S.startPoint);return u?`<a href="${u}" target="_blank" style="text-decoration:none;display:block;margin-bottom:14px"><button class="btn bp" style="width:100%;font-size:16px;padding:14px">🗺 Ver recorrido en Google Maps</button></a>`:''})()}
+<div style="font-size:13px;color:var(--text2);margin-bottom:10px">📍 ${S.routeOrdered.length} paradas · Arrastrá ⠿ para reordenar</div>
+<div style="font-size:12px;margin-bottom:10px;display:flex;gap:12px">
+  <span>✓ <span style="color:var(--green);font-weight:600">Encontrada en BD</span></span>
+  <span>★ <span style="color:var(--amber);font-weight:600">Nueva (se creará)</span></span>
 </div>
 <div id="rlist">
-  ${S.routeOrdered.map((f,i)=>`
+  ${S.routeOrdered.map((f,i) => `
   <div class="ri" data-id="${esc(f.ID)}">
     <div class="ri-num">${i+1}</div>
-    <div style="flex:1">
-      <div style="font-weight:600;font-size:14px">${esc(f.Nombre)}</div>
-      <div style="font-size:12px;color:var(--text2)">${esc(f.Dirección)}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:600;font-size:14px">${f._esNueva?'★':'✓'} ${esc(f.Nombre)}</div>
+      <div style="font-size:12px;color:var(--text2)">${esc(f['Dirección']||f.Dirección||'')}</div>
+      ${f._esNueva
+        ? `<span style="font-size:11px;color:var(--amber);font-weight:700">NUEVA FERRETERÍA</span>`
+        : `<span style="font-size:11px;color:var(--green);font-weight:700">ENCONTRADA</span>`}
     </div>
     <div class="ri-drag">⠿</div>
   </div>`).join('')}
 </div>
-<button class="btn bg2" style="margin-top:16px" onclick="crearReparto()">🚀 Iniciar reparto</button>
-`:''}`;}
+<button class="btn bg2" style="margin-top:16px" onclick="crearReparto()">🚀 Crear reparto</button>
+` : ''}`; }
 
-async function parsearYOptimizar(){
-  const txt=(document.getElementById('paste-area')?.value||S.pasteText).trim();
-  if(!txt){toast('Pegá las ferreterías primero');return;}
-  S.pasteText=txt;
+function parsearYCargar() {
+  const txt = (document.getElementById('paste-area')?.value || S.pasteText).trim();
+  if (!txt) { toast('Pegá las ferreterías primero'); return; }
+  S.pasteText = txt;
 
-  const lineas=txt.split('\n').map(l=>l.trim()).filter(Boolean);
-  if(!lineas.length){toast('No hay líneas válidas');return;}
+  const lineas = txt.split('\n').map(l => l.trim()).filter(Boolean);
+  if (!lineas.length) { toast('No hay líneas válidas'); return; }
 
-  const paradas=[];
-  for(let i=0;i<lineas.length;i++){
-    const idx=lineas[i].indexOf(',');
-    if(idx<0){toast(`Línea ${i+1} sin coma — saltada`);continue;}
-    const nombre=lineas[i].slice(0,idx).trim();
-    const dir=lineas[i].slice(idx+1).trim();
-    paradas.push({ID:'tmp-'+i, Nombre:nombre, Dirección:dir, Localidad:'', Lat:'', Lng:''});
+  const paradas = [];
+  for (let i = 0; i < lineas.length; i++) {
+    const idx = lineas[i].indexOf(',');
+    if (idx < 0) { toast(`Línea ${i+1} sin coma — saltada`); continue; }
+    const nombre = lineas[i].slice(0, idx).trim();
+    const dir    = lineas[i].slice(idx + 1).trim();
+
+    const matched = matchFerreteria(nombre);
+    if (matched) {
+      paradas.push({
+        ID: matched.ID, Nombre: matched.Nombre,
+        'Dirección': matched['Dirección'] || dir,
+        Localidad: matched.Localidad || '',
+        Lat: matched.Lat || '', Lng: matched.Lng || '',
+        'Teléfono': matched['Teléfono'] || '',
+        Contacto: matched.Contacto || '',
+        Notas: matched.Notas || '',
+        _esNueva: false, _matchedId: matched.ID
+      });
+    } else {
+      paradas.push({
+        ID: 'nueva-' + i, Nombre: nombre,
+        'Dirección': dir,
+        Localidad: '', Lat: '', Lng: '',
+        'Teléfono': '', Contacto: '', Notas: '',
+        _esNueva: true, _matchedId: null
+      });
+    }
   }
 
-  if(!paradas.length){toast('No se pudieron parsear las líneas');return;}
-
-  // Geocodificar
-  toast(`Geocodificando ${paradas.length} direcciones...`,15000);
-  let ok=0;
-  for(let i=0;i<paradas.length;i++){
-    const p=paradas[i];
-    const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(p.Dirección)}&limit=1&countrycodes=ar`;
-    try{
-      const r=await fetch(url,{headers:{'Accept-Language':'es'}});
-      const d=await r.json();
-      if(d[0]){p.Lat=parseFloat(d[0].lat);p.Lng=parseFloat(d[0].lon);ok++;}
-    }catch(e){}
-    if(i<paradas.length-1) await new Promise(r=>setTimeout(r,1100));
-  }
-
-  toast(`${ok}/${paradas.length} geocodificadas ✓`);
-  S.routeOrdered=nearestNeighbor(paradas,S.startPoint);
+  if (!paradas.length) { toast('No se pudieron parsear las líneas'); return; }
+  S.routeOrdered = paradas;
   render();
-  setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered,S.startPoint);attachSort();},100);
+  setTimeout(() => attachSort(), 100);
+  const nuevas = paradas.filter(p => p._esNueva).length;
+  toast(`${paradas.length} paradas cargadas ✓${nuevas ? ` (${nuevas} nuevas)` : ''}`);
 }
 
-function useGPS(){
-  if(!navigator.geolocation){toast('Tu navegador no soporta GPS');return;}
-  toast('Obteniendo ubicación...⏳',5000);
+function useGPS() {
+  if (!navigator.geolocation) { toast('Tu navegador no soporta GPS'); return; }
+  toast('Obteniendo ubicación...⏳', 5000);
   navigator.geolocation.getCurrentPosition(
-    pos=>{
-      S.startPoint={lat:pos.coords.latitude,lng:pos.coords.longitude,label:'Mi ubicación actual'};
-      render();toast('Punto de partida establecido ✓');
+    pos => {
+      S.startPoint = {lat: pos.coords.latitude, lng: pos.coords.longitude, label: 'Mi ubicación actual'};
+      render(); toast('Punto de partida establecido ✓');
     },
-    ()=>toast('No se pudo obtener la ubicación')
+    () => toast('No se pudo obtener la ubicación')
   );
 }
 
-function openStartPointModal(){modal(`
+function openStartPointModal() { modal(`
 <div class="modal-title">Punto de partida</div>
 <div class="fld"><label>Dirección o lugar</label>
-<input id="sp-dir" placeholder="Av. San Martín 1234, Benavidez" oninput="" style="font-size:15px"></div>
+<input id="sp-dir" placeholder="Av. San Martín 1234, Benavidez" style="font-size:15px"></div>
 <div style="display:flex;gap:8px">
   <button class="btn bp" onclick="setStartFromAddress()">Buscar →</button>
   <button class="btn bgh" onclick="closeModal()">Cancelar</button>
-</div>`);}
+</div>`); }
 
-async function setStartFromAddress(){
-  const dir=document.getElementById('sp-dir').value.trim();
-  if(!dir){toast('Ingresá una dirección');return;}
-  toast('Buscando...',5000);
-  try{
-    const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dir+', Buenos Aires, Argentina')}&limit=1&countrycodes=ar`;
-    const r=await fetch(url,{headers:{'Accept-Language':'es'}});
-    const d=await r.json();
-    if(d[0]){
-      S.startPoint={lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon),label:dir};
-      closeModal();render();toast('Punto de partida establecido ✓');
+async function setStartFromAddress() {
+  const dir = document.getElementById('sp-dir').value.trim();
+  if (!dir) { toast('Ingresá una dirección'); return; }
+  toast('Buscando...', 5000);
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dir+', Buenos Aires, Argentina')}&limit=1&countrycodes=ar`;
+    const r = await fetch(url, {headers:{'Accept-Language':'es'}});
+    const d = await r.json();
+    if (d[0]) {
+      S.startPoint = {lat: parseFloat(d[0].lat), lng: parseFloat(d[0].lon), label: dir};
+      closeModal(); render(); toast('Punto de partida establecido ✓');
     } else toast('No se encontró la dirección');
-  }catch(e){toast('Error buscando dirección');}
+  } catch(e) { toast('Error buscando dirección'); }
 }
 
-async function optimize(){
-  const sel=S.ferreterias.filter(f=>S.selectedIds.has(f.ID));
-  const needs=sel.filter(f=>!f.Lat||!f.Lng);
-  if(needs.length){
-    toast(`Geocodificando ${needs.length} direcciones... esto puede tardar unos segundos`,10000);
-    await geocodeAndSaveAll(needs);
-  }
-  S.routeOrdered=nearestNeighbor(sel,S.startPoint);
-  render();
-  setTimeout(()=>{initMap('rmap');drawRoute(S.routeOrdered,S.startPoint);attachSort();toast('Ruta optimizada ⚡');},100);
-}
-
-function attachSort(){
-  const list=document.getElementById('rlist');
-  if(!list||!window.Sortable) return;
-  Sortable.create(list,{
-    animation:140,handle:'.ri-drag',
-    onEnd:()=>{
-      const ids=[...list.querySelectorAll('.ri')].map(el=>el.dataset.id);
-      S.routeOrdered=ids.map(id=>S.routeOrdered.find(f=>f.ID===id));
-      list.querySelectorAll('.ri-num').forEach((el,i)=>el.textContent=i+1);
-      drawRoute(S.routeOrdered,S.startPoint);
-    }
-  });
-}
-
-async function crearReparto(){
-  const nombre=(document.getElementById('rn')?.value||S.repNombre).trim();
-  const fecha=(document.getElementById('rf')?.value||S.repFecha);
-  if(!nombre){toast('Ponele un nombre al reparto');return;}
-  if(!S.routeOrdered.length){toast('No hay ferreterías en la ruta');return;}
+async function crearReparto() {
+  const nombre = (document.getElementById('rn')?.value || S.repNombre).trim();
+  const fecha  = document.getElementById('rf')?.value || S.repFecha;
+  if (!nombre)               { toast('Ponele un nombre al reparto'); return; }
+  if (!S.routeOrdered.length){ toast('No hay ferreterías en la ruta'); return; }
 
   toast('Creando reparto...');
-  try{
-    const res=await apiFetch('createReparto',{
-      nombre, fecha,
-      paradas: S.routeOrdered.map(f=>({
-        id_ferreteria:(f.ID||'').startsWith('tmp-')?'':f.ID,
-        nombre:f.Nombre, direccion:f.Dirección,
-        localidad:f.Localidad||'', telefono:f.Teléfono||'',
-        contacto:f.Contacto||'', notas:f.Notas||'',
-        lat:f.Lat||'', lng:f.Lng||''
-      }))
-    });
+  try {
+    // 1. Crear ferreterías nuevas primero
+    const idMap = {};
+    for (const f of S.routeOrdered.filter(x => x._esNueva)) {
+      const res = await apiFetch('saveFerreteria', {
+        id: '', nombre: f.Nombre, direccion: f['Dirección'] || '',
+        localidad: f.Localidad || '', zona: '',
+        telefono: f['Teléfono'] || '', contacto: f.Contacto || '',
+        notas: f.Notas || '', lat: '', lng: '',
+        estado: 'Prospecto', proximavisita: ''
+      });
+      idMap[f.ID] = res.id;
+    }
 
-    const rid=res.id;
-    S.pasteText=''; S.routeOrdered=[]; S.repNombre='';
+    // 2. Construir paradas con IDs correctos
+    const paradas = S.routeOrdered.map(f => ({
+      id_ferreteria: f._esNueva ? (idMap[f.ID] || '') : (f._matchedId || f.ID || ''),
+      nombre:    f.Nombre,
+      direccion: f['Dirección'] || f.Dirección || '',
+      localidad: f.Localidad || '',
+      telefono:  f['Teléfono'] || '',
+      contacto:  f.Contacto || '',
+      notas:     f.Notas || '',
+      lat:       f.Lat || '',
+      lng:       f.Lng || ''
+    }));
+
+    // 3. Crear el reparto
+    const res = await apiFetch('createReparto', {nombre, fecha, paradas});
+    const rid = res.id;
+    S.pasteText = ''; S.routeOrdered = []; S.repNombre = '';
     await loadRepartos();
 
     modal(`
 <div class="modal-title">✅ Reparto creado</div>
-<p style="font-size:15px;margin-bottom:16px">
-  <strong>${esc(nombre)}</strong> — ${S.routeOrdered.length||res.total||'?'} paradas
-</p>
+<p style="font-size:15px;margin-bottom:16px"><strong>${esc(nombre)}</strong> — ${paradas.length} paradas</p>
 <div style="background:var(--bg);border-radius:10px;padding:14px;margin-bottom:16px;text-align:center">
   <div style="font-size:12px;color:var(--muted);margin-bottom:4px">ID del reparto (mandalo por WhatsApp)</div>
   <div style="font-size:16px;font-weight:700;word-break:break-all">${rid}</div>
 </div>
 <button class="btn bg2" onclick="copyId('${rid}')">📋 Copiar ID</button>
-<button class="btn bgh" style="margin-top:8px" onclick="closeModal();S.adminTab=2;render()">Ver en lista de repartos</button>`);}
-  catch(e){toast('Error: '+e.message);}
+<button class="btn bgh" style="margin-top:8px" onclick="closeModal();S.adminTab=3;render()">Ver en lista de repartos</button>`);
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
-function copyId(id){navigator.clipboard?.writeText(id).then(()=>toast('ID copiado ✓')).catch(()=>{
-  const el=document.createElement('input');el.value=id;document.body.appendChild(el);el.select();document.execCommand('copy');el.remove();toast('ID copiado ✓');
-});}
+function copyId(id) {
+  navigator.clipboard?.writeText(id).then(() => toast('ID copiado ✓')).catch(() => {
+    const el = document.createElement('input');
+    el.value = id; document.body.appendChild(el); el.select();
+    document.execCommand('copy'); el.remove(); toast('ID copiado ✓');
+  });
+}
 
-// ── TAB REPARTOS ─────────────────────────────────────────
-function renderTabRepartos(){
-  if(!S.repartos.length) return empty('📋','No hay repartos creados todavía');
-  return S.repartos.slice().reverse().map(r=>{
-    const tot=r.Total||0, ent=r.Entregados||0;
-    const pct=tot?Math.round(ent/tot*100):0;
+// ════════════════════════════════════════════════════════
+// TAB 3 — REPARTOS
+// ════════════════════════════════════════════════════════
+function renderTabRepartos() {
+  if (!S.repartos.length) return empty('📋', 'No hay repartos creados todavía');
+  return S.repartos.slice().reverse().map(r => {
+    const tot = r.Total||0, ent = r.Entregados||0;
+    const pct = tot ? Math.round(ent/tot*100) : 0;
     return `
 <div class="rep-item" onclick="verReparto('${esc(r.ID)}')">
   <div class="rep-hdr">
@@ -784,32 +933,31 @@ function renderTabRepartos(){
     <span class="badge b-${r.Estado||'activo'}">${r.Estado||'activo'}</span>
   </div>
   <div style="font-size:13px;color:var(--text2);margin-top:3px">${fechaStr(r.Fecha)}</div>
-  ${tot?`
+  ${tot ? `
   <div style="margin-top:10px">
     <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:4px">
       <span>${ent}/${tot} entregadas</span><span>${pct}%</span>
     </div>
     <div class="prog"><div class="prog-fill" style="width:${pct}%"></div></div>
-  </div>`:''}
-</div>`;}).join('');}
+  </div>` : ''}
+</div>`; }).join(''); }
 
-async function verReparto(id){
-  toast('Cargando...',2000);
-  try{
-    const rep=await apiFetch('getReparto',{id});
-    if(!rep){toast('No encontrado');return;}
-    const ps=rep.paradas||[];
-    const ent=ps.filter(p=>p.Estado==='entregado').length;
-    const nc=ps.filter(p=>p.Estado==='sin-contacto').length;
-    const pen=ps.filter(p=>p.Estado==='pendiente').length;
-    const fechaVal=String(rep.Fecha||'').split('T')[0];
+async function verReparto(id) {
+  toast('Cargando...', 2000);
+  try {
+    const rep = await apiFetch('getReparto', {id});
+    if (!rep) { toast('No encontrado'); return; }
+    const ps  = rep.paradas || [];
+    const ent = ps.filter(p => p.Estado === 'entregado').length;
+    const nc  = ps.filter(p => p.Estado === 'sin-contacto').length;
+    const pen = ps.filter(p => p.Estado === 'pendiente').length;
     modal(`
 <div class="modal-title">${esc(rep.Nombre)}</div>
 <div style="font-size:13px;color:var(--text2);margin-bottom:10px">${fechaStr(rep.Fecha)}</div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
   <button class="btn bo bsm" style="flex:1" onclick="copyId('${id}')">📋 Copiar ID</button>
   <button class="btn bgh bsm" style="flex:1" onclick="closeModal();openEditReparto('${id}')">✏️ Editar</button>
-  ${(()=>{const u=buildGoogleMapsUrl(ps,null);return u?`<a href="${u}" target="_blank" style="flex:1"><button class="btn bp bsm" style="width:100%;white-space:nowrap">🗺 Ver ruta en Maps</button></a>`:''})()}
+  ${(()=>{const u=buildGoogleMapsUrl(ps,null);return u?`<a href="${u}" target="_blank" style="flex:1"><button class="btn bp bsm" style="width:100%;white-space:nowrap">🗺 Ver ruta</button></a>`:''})()}
 </div>
 <div style="display:flex;gap:8px;margin-bottom:16px;text-align:center">
   <div style="flex:1;background:#D1FAE5;border-radius:10px;padding:12px">
@@ -825,7 +973,7 @@ async function verReparto(id){
     <div style="font-size:11px;color:var(--text2);font-weight:600">PENDIENTES</div>
   </div>
 </div>
-${ps.map((p,i)=>`
+${ps.map((p,i) => `
 <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
   <div style="width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;
     background:${p.Estado==='entregado'?'#16A34A':p.Estado==='sin-contacto'?'#DC2626':'#E5E7EB'};
@@ -833,31 +981,31 @@ ${ps.map((p,i)=>`
     ${p.Estado==='entregado'?'✓':p.Estado==='sin-contacto'?'✗':i+1}
   </div>
   <div style="flex:1;min-width:0">
-    <div style="font-weight:600;font-size:14px">${esc(p.Nombre)}</div>
-    <div style="font-size:12px;color:var(--text2)">${esc(p.Dirección)}</div>
+    <div style="font-weight:600;font-size:14px">${esc(p.Nombre||'')}</div>
+    <div style="font-size:12px;color:var(--text2)">${esc(p['Dirección']||p.Dirección||'')}</div>
     ${p.Nota?`<div style="font-size:12px;color:var(--amber);margin-top:2px">💬 ${esc(p.Nota)}</div>`:''}
     ${p.Timestamp?`<div style="font-size:11px;color:var(--muted)">${new Date(p.Timestamp).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}</div>`:''}
   </div>
 </div>`).join('')}
 <button class="btn bgh" style="margin-top:16px" onclick="closeModal()">Cerrar</button>`);
-  }catch(e){toast('Error: '+e.message);}
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
-async function openEditReparto(id){
-  toast('Cargando...',2000);
-  try{
-    const rep=await apiFetch('getReparto',{id});
-    S.editReparto={
-      id, nombre:rep.Nombre||'',
-      fecha:String(rep.Fecha||'').split('T')[0],
-      paradas:(rep.paradas||[]).map(p=>({...p}))
+async function openEditReparto(id) {
+  toast('Cargando...', 2000);
+  try {
+    const rep = await apiFetch('getReparto', {id});
+    S.editReparto = {
+      id, nombre: rep.Nombre || '',
+      fecha: String(rep.Fecha||'').split('T')[0],
+      paradas: (rep.paradas || []).map(p => ({...p}))
     };
     renderEditModal();
-  }catch(e){toast('Error: '+e.message);}
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
-function renderEditModal(){
-  const er=S.editReparto;
+function renderEditModal() {
+  const er = S.editReparto;
   modal(`
 <div class="modal-title">✏️ Editar reparto</div>
 <div class="fld"><label>Nombre</label><input id="er-n" value="${esc(er.nombre)}"></div>
@@ -866,26 +1014,26 @@ function renderEditModal(){
   <div style="font-size:13px;font-weight:700;color:var(--text2)">PARADAS (${er.paradas.length})</div>
   <button class="btn bp bsm" onclick="openAddToReparto()">+ Agregar</button>
 </div>
-${er.paradas.map((p,i)=>`
+${er.paradas.map((p,i) => `
 <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
   <div style="width:22px;height:22px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div>
   <div style="flex:1;min-width:0">
     <div style="font-weight:600;font-size:13px">${esc(p.Nombre||p.nombre||'')}</div>
-    <div style="font-size:11px;color:var(--text2)">${esc(p.Dirección||p.direccion||'')} · ${esc(p.Localidad||p.localidad||'')}</div>
+    <div style="font-size:11px;color:var(--text2)">${esc(p['Dirección']||p.Dirección||p.direccion||'')} · ${esc(p.Localidad||p.localidad||'')}</div>
   </div>
   <button style="background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;padding:4px" onclick="removeParadaEdit(${i})">✕</button>
 </div>`).join('')}
 <div style="display:flex;gap:8px;margin-top:14px">
   <button class="btn bp" onclick="saveEditReparto()">Guardar</button>
   <button class="btn bgh" onclick="closeModal()">Cancelar</button>
-</div>`);}
+</div>`); }
 
-function removeParadaEdit(i){
-  S.editReparto.paradas.splice(i,1);
+function removeParadaEdit(i) {
+  S.editReparto.paradas.splice(i, 1);
   renderEditModal();
 }
 
-function openAddToReparto(){
+function openAddToReparto() {
   modal(`
 <div class="modal-title">Agregar ferreterías</div>
 <input class="sbox" placeholder="🔍 Buscar..." oninput="filtAddSel(this.value)">
@@ -893,67 +1041,74 @@ function openAddToReparto(){
 <div style="display:flex;gap:8px;margin-top:14px">
   <button class="btn bp" onclick="confirmAddToReparto()">Confirmar</button>
   <button class="btn bgh" onclick="renderEditModal()">Cancelar</button>
-</div>`);}
+</div>`); }
 
-function renderAddSelItems(q){
-  const existing=new Set(S.editReparto.paradas.map(p=>p.ID_Ferretería||p.id_ferreteria||p.ID));
-  const list=(q?S.ferreterias.filter(f=>(f.Nombre||'').toLowerCase().includes(q.toLowerCase())||(f.Localidad||'').toLowerCase().includes(q.toLowerCase())):S.ferreterias)
-    .filter(f=>!existing.has(f.ID));
-  if(!list.length) return `<div style="padding:20px;text-align:center;color:var(--muted)">Sin resultados</div>`;
-  return list.map(f=>`
+function renderAddSelItems(q) {
+  const existing = new Set(S.editReparto.paradas.map(p => p['ID_Ferretería']||p.id_ferreteria||p.ID));
+  const list = (q ? S.ferreterias.filter(f =>
+    (f.Nombre||'').toLowerCase().includes(q.toLowerCase()) ||
+    (f.Localidad||'').toLowerCase().includes(q.toLowerCase())
+  ) : S.ferreterias).filter(f => !existing.has(f.ID));
+  if (!list.length) return `<div style="padding:20px;text-align:center;color:var(--muted)">Sin resultados</div>`;
+  return list.map(f => `
 <label class="chk-item">
   <input type="checkbox" data-id="${esc(f.ID)}">
   <div>
     <div style="font-weight:600;font-size:14px">${esc(f.Nombre)}</div>
-    <div style="font-size:12px;color:var(--text2)">${esc(f.Dirección)} · ${esc(f.Localidad)}</div>
+    <div style="font-size:12px;color:var(--text2)">${esc(f['Dirección']||'')} · ${esc(f.Localidad||'')}</div>
   </div>
-</label>`).join('');}
+</label>`).join(''); }
 
-function filtAddSel(q){
-  const el=document.getElementById('add-sel-list');
-  if(el) el.innerHTML=renderAddSelItems(q);
+function filtAddSel(q) {
+  const el = document.getElementById('add-sel-list');
+  if (el) el.innerHTML = renderAddSelItems(q);
 }
 
-function confirmAddToReparto(){
-  const checked=[...document.querySelectorAll('#add-sel-list input:checked')];
-  const ids=checked.map(el=>el.dataset.id);
-  const toAdd=S.ferreterias.filter(f=>ids.includes(f.ID));
-  toAdd.forEach(f=>S.editReparto.paradas.push({
-    Nombre:f.Nombre, Dirección:f.Dirección, Localidad:f.Localidad,
-    Teléfono:f.Teléfono||'', Contacto:f.Contacto||'', Notas:f.Notas||'',
-    Lat:f.Lat||'', Lng:f.Lng||'', 'ID_Ferretería':f.ID, Estado:'pendiente'
+function confirmAddToReparto() {
+  const checked = [...document.querySelectorAll('#add-sel-list input:checked')];
+  const ids = checked.map(el => el.dataset.id);
+  const toAdd = S.ferreterias.filter(f => ids.includes(f.ID));
+  toAdd.forEach(f => S.editReparto.paradas.push({
+    Nombre: f.Nombre, 'Dirección': f['Dirección'], Localidad: f.Localidad,
+    'Teléfono': f['Teléfono']||'', Contacto: f.Contacto||'', Notas: f.Notas||'',
+    Lat: f.Lat||'', Lng: f.Lng||'', 'ID_Ferretería': f.ID, Estado: 'pendiente'
   }));
   renderEditModal();
 }
 
-async function saveEditReparto(){
-  const er=S.editReparto;
-  const nombre=document.getElementById('er-n')?.value?.trim()||er.nombre;
-  const fecha=document.getElementById('er-f')?.value||er.fecha;
-  if(!nombre){toast('El nombre es obligatorio');return;}
-  closeModal();toast('Guardando...');
-  try{
-    await apiFetch('updateReparto',{id:er.id,nombre,fecha});
-    await apiFetch('replaceParadas',{
-      id:er.id,
-      paradas:er.paradas.map((p,i)=>({
-        id_ferreteria:p['ID_Ferretería']||p.id_ferreteria||'',
-        nombre:p.Nombre||p.nombre||'', direccion:p.Dirección||p.direccion||'',
-        localidad:p.Localidad||p.localidad||'', telefono:p.Teléfono||p.telefono||'',
-        contacto:p.Contacto||p.contacto||'', notas:p.Notas||p.notas||'',
-        lat:p.Lat||p.lat||'', lng:p.Lng||p.lng||'', orden:i+1
+async function saveEditReparto() {
+  const er = S.editReparto;
+  const nombre = document.getElementById('er-n')?.value?.trim() || er.nombre;
+  const fecha  = document.getElementById('er-f')?.value || er.fecha;
+  if (!nombre) { toast('El nombre es obligatorio'); return; }
+  closeModal(); toast('Guardando...');
+  try {
+    await apiFetch('updateReparto', {id: er.id, nombre, fecha});
+    await apiFetch('replaceParadas', {
+      id: er.id,
+      paradas: er.paradas.map((p,i) => ({
+        id_ferreteria: p['ID_Ferretería']||p.id_ferreteria||'',
+        nombre:    p.Nombre||p.nombre||'',
+        direccion: p['Dirección']||p.Dirección||p.direccion||'',
+        localidad: p.Localidad||p.localidad||'',
+        telefono:  p['Teléfono']||p.telefono||'',
+        contacto:  p.Contacto||p.contacto||'',
+        notas:     p.Notas||p.notas||'',
+        lat:       p.Lat||p.lat||'',
+        lng:       p.Lng||p.lng||'',
+        orden:     i+1
       }))
     });
-    S.editReparto=null;
-    await loadRepartos();render();
+    S.editReparto = null;
+    await loadRepartos(); render();
     toast('Reparto actualizado ✓');
-  }catch(e){toast('Error: '+e.message);}
+  } catch(e) { toast('Error: ' + e.message); }
 }
 
 // ════════════════════════════════════════════════════════
 // FIELD VIEW
 // ════════════════════════════════════════════════════════
-function renderFieldEntry(){return `
+function renderFieldEntry() { return `
 <div class="center-screen">
   <div class="cs-logo">🚚</div>
   <div class="cs-title">Modo Repartidor</div>
@@ -963,53 +1118,53 @@ function renderFieldEntry(){return `
     <input id="fid" placeholder="Pegá el ID acá..." style="font-size:15px;letter-spacing:.5px" oninput="this.value=this.value.trim()">
   </div>
   <button class="btn bp" onclick="loadReparto()">Cargar ruta →</button>
-  ${S.reparto?`
+  ${S.reparto ? `
   <button class="btn bgh" style="margin-top:8px" onclick="S.view='field';render()">
     ↩ Retomar: ${esc(S.reparto.Nombre)}
-  </button>`:''}
+  </button>` : ''}
   <button class="btn bgh" style="margin-top:8px;color:var(--muted);font-size:13px" onclick="S.view='admin';render()">
     ← Ir al panel admin
   </button>
-</div>`;}
+</div>`; }
 
-async function loadReparto(id, savedIdx){
-  if(!id) id=document.getElementById('fid')?.value?.trim();
-  if(!id){toast('Ingresá el ID');return;}
-  S.view='loading';render();
-  try{
-    const rep=await apiFetch('getReparto',{id});
-    if(!rep||!rep.paradas){
-      S.view='field-entry';render();
+async function loadReparto(id, savedIdx) {
+  if (!id) id = document.getElementById('fid')?.value?.trim();
+  if (!id) { toast('Ingresá el ID'); return; }
+  S.view = 'loading'; render();
+  try {
+    const rep = await apiFetch('getReparto', {id});
+    if (!rep || !rep.paradas) {
+      S.view = 'field-entry'; render();
       localStorage.removeItem('hzn_field_reparto');
       localStorage.removeItem('hzn_field_idx');
-      toast('No se encontró el reparto. Revisá el ID.');return;
+      toast('No se encontró el reparto. Revisá el ID.'); return;
     }
-    S.reparto=rep;
-    if(savedIdx!=null && savedIdx>=0 && savedIdx<rep.paradas.length){
-      S.paradaIdx=savedIdx;
+    S.reparto = rep;
+    if (savedIdx != null && savedIdx >= 0 && savedIdx < rep.paradas.length) {
+      S.paradaIdx = savedIdx;
     } else {
-      const first=rep.paradas.findIndex(p=>p.Estado==='pendiente');
-      S.paradaIdx=first>=0?first:0;
+      const first = rep.paradas.findIndex(p => p.Estado === 'pendiente');
+      S.paradaIdx = first >= 0 ? first : 0;
     }
-    localStorage.setItem('hzn_field_reparto',id);
-    localStorage.setItem('hzn_field_idx',S.paradaIdx);
-    S.view='field';render();
-  }catch(e){S.view='field-entry';render();toast('Error: '+e.message);}
+    localStorage.setItem('hzn_field_reparto', id);
+    localStorage.setItem('hzn_field_idx', S.paradaIdx);
+    S.view = 'field'; render();
+  } catch(e) { S.view = 'field-entry'; render(); toast('Error: ' + e.message); }
 }
 
-function salirModoRepartidor(){
+function salirModoRepartidor() {
   localStorage.removeItem('hzn_field_reparto');
   localStorage.removeItem('hzn_field_idx');
-  S.reparto=null;S.paradaIdx=0;S.view='field-entry';render();
+  S.reparto = null; S.paradaIdx = 0; S.view = 'field-entry'; render();
 }
 
-function renderField(){
-  const rep=S.reparto;
-  if(!rep) return renderFieldEntry();
-  const ps=rep.paradas||[];
-  const total=ps.length;
-  const done=ps.filter(p=>p.Estado!=='pendiente').length;
-  const pct=total?Math.round(done/total*100):0;
+function renderField() {
+  const rep = S.reparto;
+  if (!rep) return renderFieldEntry();
+  const ps    = rep.paradas || [];
+  const total = ps.length;
+  const done  = ps.filter(p => p.Estado !== 'pendiente').length;
+  const pct   = total ? Math.round(done/total*100) : 0;
 
   return `
 <div class="fhdr">
@@ -1020,18 +1175,18 @@ function renderField(){
       <div class="fhdr-prog">${done}/${total} completadas · ${pct}%</div>
     </div>
     <button class="fhdr-list-btn" onclick="S.fieldTab=S.fieldTab==='parada'?'lista':'parada';render()">
-      ${S.fieldTab==='parada'?'📋 Lista':'📍 Parada'}
+      ${S.fieldTab === 'parada' ? '📋 Lista' : '📍 Parada'}
     </button>
   </div>
   <div class="prog"><div class="prog-fill" style="width:${pct}%"></div></div>
 </div>
 <div class="content" style="padding-top:12px">
-  ${S.fieldTab==='parada'?renderParada(ps):renderStopList(ps)}
-</div>`;}
+  ${S.fieldTab === 'parada' ? renderParada(ps) : renderStopList(ps)}
+</div>`; }
 
-function renderParada(ps){
-  const par=ps[S.paradaIdx];
-  if(!par) return `
+function renderParada(ps) {
+  const par = ps[S.paradaIdx];
+  if (!par) return `
 <div class="par-card" style="text-align:center;padding:40px 20px">
   <div style="font-size:52px;margin-bottom:12px">🎉</div>
   <div style="font-size:22px;font-weight:800;margin-bottom:8px">¡Ruta completada!</div>
@@ -1039,31 +1194,33 @@ function renderParada(ps){
   <button class="btn bp" onclick="verResumen()">Ver resumen del día</button>
 </div>`;
 
-  const isEnt=par.Estado==='entregado';
-  const isNC=par.Estado==='sin-contacto';
-  const isDone=isEnt||isNC;
+  const isEnt  = par.Estado === 'entregado';
+  const isNC   = par.Estado === 'sin-contacto';
+  const isDone = isEnt || isNC;
 
-  const lat=par.Lat||par.lat||'';
-  const lng=par.Lng||par.lng||'';
-  const dir=`${par.Dirección||par.direccion||''}, ${par.Localidad||par.localidad||''}, Buenos Aires, Argentina`;
-  const wazeUrl=lat&&lng?`https://ul.waze.com/ul?ll=${lat},${lng}&navigate=yes&zoom=17`:`https://ul.waze.com/ul?q=${encodeURIComponent(dir)}&navigate=yes`;
-  const mapsUrl=lat&&lng?`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`:`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dir)}&travelmode=driving`;
-  const tel=par.Teléfono||par.telefono||'';
-  const contacto=par.Contacto||par.contacto||'';
-  const notas=par.Notas||par.notas||'';
+  const lat    = par.Lat||par.lat||'';
+  const lng    = par.Lng||par.lng||'';
+  const dir    = `${par['Dirección']||par.Dirección||par.direccion||''}, ${par.Localidad||par.localidad||''}, Buenos Aires, Argentina`;
+  const wazeUrl= lat&&lng ? `https://ul.waze.com/ul?ll=${lat},${lng}&navigate=yes&zoom=17`
+                           : `https://ul.waze.com/ul?q=${encodeURIComponent(dir)}&navigate=yes`;
+  const mapsUrl= lat&&lng ? `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`
+                           : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dir)}&travelmode=driving`;
+  const tel      = par['Teléfono']||par.telefono||'';
+  const contacto = par.Contacto||par.contacto||'';
+  const notas    = par.Notas||par.notas||'';
 
   return `
 <div class="par-card">
   <div class="par-num">Parada ${S.paradaIdx+1} de ${ps.length}</div>
   <div class="par-nombre">${esc(par.Nombre||par.nombre||'')}</div>
-  <div class="par-dir">📍 ${esc(par.Dirección||par.direccion||'')} · ${esc(par.Localidad||par.localidad||'')}</div>
-  ${tel?`<a href="tel:${esc(tel)}" style="text-decoration:none"><div class="par-tel">📞 ${esc(tel)}</div></a>`:''}
-  ${contacto?`<div style="font-size:14px;color:var(--text2);margin-bottom:10px">👤 ${esc(contacto)}</div>`:''}
-  ${notas?`<div class="par-notas-prev">💡 ${esc(notas)}</div>`:''}
+  <div class="par-dir">📍 ${esc(par['Dirección']||par.Dirección||par.direccion||'')} · ${esc(par.Localidad||par.localidad||'')}</div>
+  ${tel ? `<a href="tel:${esc(tel)}" style="text-decoration:none"><div class="par-tel">📞 ${esc(tel)}</div></a>` : ''}
+  ${contacto ? `<div style="font-size:14px;color:var(--text2);margin-bottom:10px">👤 ${esc(contacto)}</div>` : ''}
+  ${notas ? `<div class="par-notas-prev">💡 ${esc(notas)}</div>` : ''}
 
-  ${isDone?`<div class="par-done-banner" style="background:${isEnt?'#D1FAE5':'#FEE2E2'};color:${isEnt?'#065F46':'#991B1B'}">
-    ${isEnt?'✅ Entregado':'❌ Sin contacto'}
-  </div>`:''}
+  ${isDone ? `<div class="par-done-banner" style="background:${isEnt?'#D1FAE5':'#FEE2E2'};color:${isEnt?'#065F46':'#991B1B'}">
+    ${isEnt ? '✅ Entregado' : '❌ Sin contacto'}
+  </div>` : ''}
 
   <div style="display:flex;gap:8px;margin-bottom:0">
     <a href="${wazeUrl}" target="_blank" style="flex:1;text-decoration:none">
@@ -1080,63 +1237,61 @@ function renderParada(ps){
     <label>Momentario / Comentario</label>
     <textarea id="nota" placeholder="Dejá una nota..." rows="2">${esc(par.Nota||'')}</textarea>
   </div>
-  ${!isDone?`
+  ${!isDone ? `
   <button class="btn bg2" style="margin-bottom:8px" onclick="marcar('entregado')">✅ Entregado</button>
   <button class="btn br" style="margin-bottom:8px" onclick="marcar('sin-contacto')">❌ No estaba / Sin contacto</button>
-  `:`<button class="btn bgh" style="margin-bottom:8px" onclick="marcar('pendiente')">↩ Deshacer</button>`}
-  ${S.paradaIdx<ps.length-1
-    ?`<button class="btn bo" onclick="irA(${S.paradaIdx+1})">Siguiente → <span style="font-weight:400;font-size:13px">${esc(ps[S.paradaIdx+1]?.Nombre||'')}</span></button>`
-    :`<button class="btn bo" onclick="verResumen()">Ver resumen del día 📊</button>`}
+  ` : `<button class="btn bgh" style="margin-bottom:8px" onclick="marcar('pendiente')">↩ Deshacer</button>`}
+  ${S.paradaIdx < ps.length-1
+    ? `<button class="btn bo" onclick="irA(${S.paradaIdx+1})">Siguiente → <span style="font-weight:400;font-size:13px">${esc(ps[S.paradaIdx+1]?.Nombre||'')}</span></button>`
+    : `<button class="btn bo" onclick="verResumen()">Ver resumen del día 📊</button>`}
 </div>
-${S.paradaIdx>0?`<button style="background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;display:block;margin:0 auto;padding:8px" onclick="irA(${S.paradaIdx-1})">← Parada anterior</button>`:''}
-`;}
+${S.paradaIdx > 0 ? `<button style="background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;display:block;margin:0 auto;padding:8px" onclick="irA(${S.paradaIdx-1})">← Parada anterior</button>` : ''}`; }
 
-function renderStopList(ps){return `
+function renderStopList(ps) { return `
 <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">TODAS LAS PARADAS</div>
-${ps.map((p,i)=>{
-  const isEnt=p.Estado==='entregado';
-  const isNC=p.Estado==='sin-contacto';
-  const isCur=i===S.paradaIdx;
+${ps.map((p,i) => {
+  const isEnt = p.Estado === 'entregado';
+  const isNC  = p.Estado === 'sin-contacto';
+  const isCur = i === S.paradaIdx;
   return `
 <div class="sl-item ${isEnt?'done':isNC?'nocon':''} ${isCur?'current':''}"
   onclick="irA(${i});S.fieldTab='parada';render()">
   <div class="sl-num">${isEnt?'✓':isNC?'✗':i+1}</div>
   <div style="flex:1;min-width:0">
     <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.Nombre||p.nombre||'')}</div>
-    <div style="font-size:12px;color:var(--text2)">${esc(p.Dirección||p.direccion||'')} · ${esc(p.Localidad||p.localidad||'')}</div>
+    <div style="font-size:12px;color:var(--text2)">${esc(p['Dirección']||p.Dirección||p.direccion||'')} · ${esc(p.Localidad||p.localidad||'')}</div>
   </div>
-  ${p.Nota?'<span style="font-size:16px">💬</span>':''}
-  ${isCur?'<span style="font-size:14px;color:var(--blue)">●</span>':''}
-</div>`;}).join('')}`;}
+  ${p.Nota ? '<span style="font-size:16px">💬</span>' : ''}
+  ${isCur  ? '<span style="font-size:14px;color:var(--blue)">●</span>' : ''}
+</div>`; }).join('')}`; }
 
-async function marcar(estado){
-  const par=S.reparto.paradas[S.paradaIdx];
-  const nota=document.getElementById('nota')?.value||'';
-  par.Estado=estado;par.Nota=nota;
+async function marcar(estado) {
+  const par  = S.reparto.paradas[S.paradaIdx];
+  const nota = document.getElementById('nota')?.value || '';
+  par.Estado = estado; par.Nota = nota;
   render();
-  try{
-    await apiFetch('updateParada',{id:par.ID,estado,nota});
-    if(estado==='entregado'){
-      const nxt=S.reparto.paradas.findIndex((p,i)=>i>S.paradaIdx&&p.Estado==='pendiente');
-      if(nxt>=0) setTimeout(()=>irA(nxt),450);
+  try {
+    await apiFetch('updateParada', {id: par.ID, estado, nota});
+    if (estado === 'entregado') {
+      const nxt = S.reparto.paradas.findIndex((p,i) => i > S.paradaIdx && p.Estado === 'pendiente');
+      if (nxt >= 0) setTimeout(() => irA(nxt), 450);
     }
-  }catch(e){toast('No se pudo guardar. Reintentá más tarde.');}
+  } catch(e) { toast('No se pudo guardar. Reintentá más tarde.'); }
 }
 
-function irA(idx){
-  // save current note
-  const nota=document.getElementById('nota');
-  if(nota&&S.reparto?.paradas[S.paradaIdx]) S.reparto.paradas[S.paradaIdx].Nota=nota.value;
-  S.paradaIdx=idx;
-  localStorage.setItem('hzn_field_idx',idx);
-  render();window.scrollTo(0,0);
+function irA(idx) {
+  const nota = document.getElementById('nota');
+  if (nota && S.reparto?.paradas[S.paradaIdx]) S.reparto.paradas[S.paradaIdx].Nota = nota.value;
+  S.paradaIdx = idx;
+  localStorage.setItem('hzn_field_idx', idx);
+  render(); window.scrollTo(0, 0);
 }
 
-function verResumen(){
-  const ps=S.reparto?.paradas||[];
-  const ent=ps.filter(p=>p.Estado==='entregado');
-  const nc=ps.filter(p=>p.Estado==='sin-contacto');
-  const pen=ps.filter(p=>p.Estado==='pendiente');
+function verResumen() {
+  const ps  = S.reparto?.paradas || [];
+  const ent = ps.filter(p => p.Estado === 'entregado');
+  const nc  = ps.filter(p => p.Estado === 'sin-contacto');
+  const pen = ps.filter(p => p.Estado === 'pendiente');
   modal(`
 <div class="modal-title">📊 Resumen del reparto</div>
 <div style="display:flex;gap:8px;margin-bottom:16px;text-align:center">
@@ -1150,47 +1305,45 @@ function verResumen(){
   </div>
   <div style="flex:1;background:var(--bg);border-radius:12px;padding:16px">
     <div style="font-size:32px;font-weight:800">${pen.length}</div>
-    <div style="font-size:12px;color:var(--text2);font-weight:600">PENDIENTES</div>
+    <div style="font-size:11px;color:var(--text2);font-weight:600">PENDIENTES</div>
   </div>
 </div>
-${nc.length?`<div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px">Sin contacto:</div>
-${nc.map(p=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:14px">❌ ${esc(p.Nombre||p.nombre||'')}${p.Nota?` · <em style="color:var(--text2)">${esc(p.Nota)}</em>`:''}</div>`).join('')}`:''}
-${pen.length?`<div style="font-size:13px;font-weight:700;color:var(--text2);margin:12px 0 8px">Pendientes:</div>
-${pen.map(p=>`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:14px">⏳ ${esc(p.Nombre||p.nombre||'')}</div>`).join('')}`:''}
-<button class="btn bg2" style="margin-top:16px" onclick="closeModal()">Cerrar</button>`);}
+${nc.length ? `<div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px">Sin contacto:</div>
+${nc.map(p => `<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:14px">❌ ${esc(p.Nombre||p.nombre||'')}${p.Nota?` · <em style="color:var(--text2)">${esc(p.Nota)}</em>`:''}</div>`).join('')}` : ''}
+${pen.length ? `<div style="font-size:13px;font-weight:700;color:var(--text2);margin:12px 0 8px">Pendientes:</div>
+${pen.map(p => `<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:14px">⏳ ${esc(p.Nombre||p.nombre||'')}</div>`).join('')}` : ''}
+<button class="btn bg2" style="margin-top:16px" onclick="closeModal()">Cerrar</button>`); }
 
 // ════════════════════════════════════════════════════════
-// DATA
+// DATA LOADING
 // ════════════════════════════════════════════════════════
-async function loadFerreterias(){S.ferreterias=await apiFetch('getFerreterias');}
-async function loadRepartos(){S.repartos=await apiFetch('getRepartos');}
+async function loadFerreterias() { S.ferreterias = await apiFetch('getFerreterias'); }
+async function loadRepartos()    { S.repartos    = await apiFetch('getRepartos'); }
 
-async function loadApp(){
-  if(!S.scriptUrl){S.view='setup';render();return;}
-  S.view='loading';render();
-  try{
-    await Promise.all([loadFerreterias(),loadRepartos()]);
-    S.view='admin';render();
-  }catch(e){
-    S.view='admin';S.ferreterias=[];S.repartos=[];render();
-    toast('Error al conectar: '+e.message,6000);
+async function loadApp() {
+  if (!S.scriptUrl) { S.view = 'setup'; render(); return; }
+  S.view = 'loading'; render();
+  try {
+    await Promise.all([loadFerreterias(), loadRepartos(), loadDashboardStats()]);
+    S.view = 'admin'; render();
+  } catch(e) {
+    S.view = 'admin'; S.ferreterias = []; S.repartos = []; render();
+    toast('Error al conectar: ' + e.message, 6000);
   }
 }
 
 // ── INIT ──────────────────────────────────────────────────
-const qp=new URLSearchParams(window.location.search);
-if(qp.get('reparto')){
-  // Deep link con reparto ID
-  S.view='field-entry';render();
-  setTimeout(()=>{
-    const el=document.getElementById('fid');
-    if(el){el.value=qp.get('reparto');loadReparto();}
-  },100);
+const qp = new URLSearchParams(window.location.search);
+if (qp.get('reparto')) {
+  S.view = 'field-entry'; render();
+  setTimeout(() => {
+    const el = document.getElementById('fid');
+    if (el) { el.value = qp.get('reparto'); loadReparto(); }
+  }, 100);
 } else {
-  // Restaurar sesión del repartidor si existe
-  const _savedRep=localStorage.getItem('hzn_field_reparto');
-  const _savedIdx=parseInt(localStorage.getItem('hzn_field_idx')||'0',10);
-  if(_savedRep){
+  const _savedRep = localStorage.getItem('hzn_field_reparto');
+  const _savedIdx = parseInt(localStorage.getItem('hzn_field_idx') || '0', 10);
+  if (_savedRep) {
     loadReparto(_savedRep, _savedIdx);
   } else {
     loadApp();
