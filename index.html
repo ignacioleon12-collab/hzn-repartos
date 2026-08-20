@@ -12,7 +12,7 @@
   --blue:#2563EB;--blue-d:#1D4ED8;--green:#16A34A;--amber:#D97706;--red:#DC2626;
   --bg:#F0F2F5;--card:#fff;--border:#E5E7EB;--muted:#9CA3AF;--text:#111827;--text2:#6B7280;
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:640px;margin:0 auto;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:1100px;margin:0 auto;}
 
 /* HEADER */
 .hdr{background:var(--blue);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
@@ -131,6 +131,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .moverlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:200}
 .modal{background:#fff;border-radius:20px 20px 0 0;padding:22px 18px 40px;width:100%;max-width:640px;max-height:92vh;overflow-y:auto}
 .modal-title{font-size:18px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* DESKTOP OVERRIDES */
+@media (min-width:768px){
+  body{padding-bottom:24px}
+  .content{padding:20px 28px 32px}
+  .tab-bar{padding:10px 20px;gap:10px}
+  .tab{font-size:13px;padding:10px 8px}
+  .moverlay{align-items:center}
+  .modal{border-radius:16px;max-width:700px;max-height:88vh;padding:28px 28px 36px}
+  .kpi-row{min-width:unset;flex-wrap:wrap}
+  .kpi-tile{flex:1;min-width:120px}
+  .hdr{padding:14px 24px}
+  .fi,.rep-item{margin-bottom:9px}
+  /* 2-col layout for main admin content */
+  .desktop-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+  .desktop-cols-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:start}
+}
 
 /* CHECKBOX */
 .chk-item{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer}
@@ -1006,6 +1023,12 @@ async function openEditReparto(id) {
 
 function renderEditModal() {
   const er = S.editReparto;
+  // Save form values if already rendered
+  const nEl = document.getElementById('er-n');
+  const fEl = document.getElementById('er-f');
+  if (nEl) er.nombre = nEl.value;
+  if (fEl) er.fecha  = fEl.value;
+
   modal(`
 <div class="modal-title">✏️ Editar reparto</div>
 <div class="fld"><label>Nombre</label><input id="er-n" value="${esc(er.nombre)}"></div>
@@ -1014,19 +1037,39 @@ function renderEditModal() {
   <div style="font-size:13px;font-weight:700;color:var(--text2)">PARADAS (${er.paradas.length})</div>
   <button class="btn bp bsm" onclick="openAddToReparto()">+ Agregar</button>
 </div>
+<div id="er-paradas">
 ${er.paradas.map((p,i) => `
-<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
-  <div style="width:22px;height:22px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div>
+<div class="ri" data-i="${i}" style="padding:8px 6px;border-bottom:1px solid var(--border);border-radius:0;box-shadow:none;background:#fff;margin-bottom:0">
+  <span class="ri-drag" style="font-size:18px;color:var(--muted);cursor:grab;padding:0 4px;touch-action:none">☰</span>
+  <div class="er-num" style="width:22px;height:22px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">${i+1}</div>
   <div style="flex:1;min-width:0">
     <div style="font-weight:600;font-size:13px">${esc(p.Nombre||p.nombre||'')}</div>
-    <div style="font-size:11px;color:var(--text2)">${esc(p['Dirección']||p.Dirección||p.direccion||'')} · ${esc(p.Localidad||p.localidad||'')}</div>
+    <div style="font-size:11px;color:var(--text2)">${esc(p['Dirección']||p.Dirección||p.direccion||'')}</div>
   </div>
-  <button style="background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;padding:4px" onclick="removeParadaEdit(${i})">✕</button>
+  <button style="background:none;border:none;color:var(--red);cursor:pointer;font-size:18px;padding:4px;flex-shrink:0" onclick="removeParadaEdit(${i})">✕</button>
 </div>`).join('')}
+</div>
 <div style="display:flex;gap:8px;margin-top:14px">
   <button class="btn bp" onclick="saveEditReparto()">Guardar</button>
   <button class="btn bgh" onclick="closeModal()">Cancelar</button>
-</div>`); }
+</div>`);
+  setTimeout(() => attachSortEdit(), 80);
+}
+
+function attachSortEdit() {
+  const list = document.getElementById('er-paradas');
+  if (!list || !window.Sortable) return;
+  Sortable.create(list, {
+    animation: 140,
+    handle: '.ri-drag',
+    onEnd: () => {
+      const items = [...list.querySelectorAll('[data-i]')];
+      const old   = [...S.editReparto.paradas];
+      S.editReparto.paradas = items.map(el => old[parseInt(el.dataset.i)]);
+      renderEditModal();
+    }
+  });
+}
 
 function removeParadaEdit(i) {
   S.editReparto.paradas.splice(i, 1);
