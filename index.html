@@ -1351,20 +1351,21 @@ function renderField() {
   return `
 <div class="fhdr">
   <div class="fhdr-top">
-    <button style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px" onclick="salirModoRepartidor()">←</button>
-    <div style="flex:1">
+    <div style="flex:1;min-width:0">
       <div class="fhdr-rep">${esc(rep.Nombre)}</div>
       <div class="fhdr-prog">${done}/${total} completadas · ${pct}%</div>
     </div>
     <button class="fhdr-list-btn" onclick="S.fieldTab=S.fieldTab==='parada'?'lista':'parada';render()">
       ${S.fieldTab === 'parada' ? '📋 Lista' : '📍 Parada'}
     </button>
+    <button style="background:#FEE2E2;border:none;color:#991B1B;font-size:12px;font-weight:700;cursor:pointer;padding:6px 10px;border-radius:8px;flex-shrink:0" onclick="salirModoRepartidor()">✕ Salir</button>
   </div>
   <div class="prog"><div class="prog-fill" style="width:${pct}%"></div></div>
 </div>
 <div class="content" style="padding-top:12px">
   ${S.fieldTab === 'parada' ? renderParada(ps) : renderStopList(ps)}
-</div>`; }
+</div>
+<button onclick="abrirAgregarFerField()" style="position:fixed;bottom:24px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:150;display:flex;align-items:center;justify-content:center;line-height:1">+</button>`; }
 
 function renderParada(ps) {
   const par = ps[S.paradaIdx];
@@ -1382,11 +1383,22 @@ function renderParada(ps) {
 
   const lat    = par.Lat||par.lat||'';
   const lng    = par.Lng||par.lng||'';
-  const dir    = `${par['Dirección']||par.Dirección||par.direccion||''}, ${par.Localidad||par.localidad||''}, Buenos Aires, Argentina`;
-  const wazeUrl= lat&&lng ? `https://ul.waze.com/ul?ll=${lat},${lng}&navigate=yes&zoom=17`
-                           : `https://ul.waze.com/ul?q=${encodeURIComponent(dir)}&navigate=yes`;
-  const mapsUrl= lat&&lng ? `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`
-                           : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dir)}&travelmode=driving`;
+  const nombre = par.Nombre||par.nombre||'';
+  const rawDir = par['Dirección']||par.Dirección||par.direccion||'';
+  const localidad = par.Localidad||par.localidad||'';
+  // Limpiar códigos postales argentinos (B16211RV, B1636ACM, etc.) y texto redundante
+  const dirLimpia = rawDir
+    .replace(/\b[A-Z]\d{4,6}[A-Z]{0,3}\b/g, '')
+    .replace(/,?\s*Provincia de Buenos Aires/gi, '')
+    .replace(/,\s*,/g, ',').replace(/,\s*$/, '').trim();
+  const destText = localidad ? `${dirLimpia}, ${localidad}` : dirLimpia;
+  // Sin coords: Waze busca por nombre (más preciso); Maps usa dirección limpia
+  const wazeUrl = lat&&lng
+    ? `https://ul.waze.com/ul?ll=${lat},${lng}&navigate=yes&zoom=17`
+    : `https://ul.waze.com/ul?q=${encodeURIComponent(nombre)}&navigate=yes`;
+  const mapsUrl = lat&&lng
+    ? `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`
+    : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destText)}&travelmode=driving`;
   const tel      = par['Teléfono']||par.telefono||'';
   const contacto = par.Contacto||par.contacto||'';
   const notas    = par.Notas||par.notas||'';
@@ -1467,6 +1479,58 @@ function irA(idx) {
   S.paradaIdx = idx;
   localStorage.setItem('hzn_field_idx', idx);
   render(); window.scrollTo(0, 0);
+}
+
+function abrirAgregarFerField() {
+  modal(`
+<div class="modal-title">➕ Agregar ferretería</div>
+<div style="font-size:13px;color:var(--text2);margin-bottom:14px">Ferretería encontrada en el camino que no estaba en el reparto</div>
+<div class="fld"><label>Nombre *</label><input id="aff-nom" placeholder="Ferretería El Sol" autofocus></div>
+<div class="fld"><label>Dirección *</label><input id="aff-dir" placeholder="Av. San Martín 1234, Benavidez"></div>
+<div class="fld"><label>Nota (opcional)</label><input id="aff-nota" placeholder="Dejé folleto, hablar con el dueño..."></div>
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+  <button class="btn bg2" onclick="guardarFerField(true)">✅ Registrar como entregada</button>
+  <button class="btn bgh" onclick="guardarFerField(false)">💾 Solo guardar como prospecto</button>
+  <button class="btn" style="background:none;color:var(--muted);font-size:13px" onclick="closeModal()">Cancelar</button>
+</div>`);
+}
+
+async function guardarFerField(entregada) {
+  const nom  = document.getElementById('aff-nom')?.value?.trim();
+  const dir  = document.getElementById('aff-dir')?.value?.trim();
+  const nota = document.getElementById('aff-nota')?.value?.trim() || '';
+  if (!nom)  { toast('El nombre es obligatorio'); return; }
+  if (!dir)  { toast('La dirección es obligatoria'); return; }
+  closeModal();
+  toast('Guardando...', 3000);
+  try {
+    // 1. Crear la ferretería
+    const ferData = await apiFetch('saveFerreteria', {
+      nombre: nom, direccion: dir, estado: 'Prospecto',
+      notas: nota
+    });
+    const idFer = ferData?.id || null;
+
+    // 2. Si hay reparto activo y se marcó como entregada, agregar parada
+    if (entregada && S.reparto?.ID && idFer) {
+      await apiFetch('appendParada', {
+        id_reparto: S.reparto.ID,
+        id_ferreteria: idFer,
+        nombre: nom, direccion: dir,
+        estado: 'entregado', nota
+      });
+      // Agregar en memoria para que aparezca en la lista
+      S.reparto.paradas.push({
+        ID: idFer + '-field', Nombre: nom, 'Dirección': dir,
+        Localidad: '', Lat: '', Lng: '', Nota: nota,
+        'ID_Ferretería': idFer, Estado: 'entregado'
+      });
+      toast(`${nom} guardada y marcada como entregada ✓`);
+    } else {
+      toast(`${nom} guardada como prospecto ✓`);
+    }
+    render();
+  } catch(e) { toast('Error al guardar: ' + e.message); }
 }
 
 function verResumen() {
